@@ -25,8 +25,8 @@ const ForgotPasswordScreen = () => {
 
 const handlePasswordSubmit = () => {
     // Handle password submission logic here
-    navigation.navigate('LogInScreen');
-};
+  console.log('Password submitted');
+  };
 
   return (
       
