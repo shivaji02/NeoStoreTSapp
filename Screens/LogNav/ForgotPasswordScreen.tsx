@@ -1,23 +1,42 @@
-import { View, Text, ScrollView, TextInput, TouchableHighlight } from 'react-native'
+import { View, Text, TextInput, TouchableHighlight, Alert } from 'react-native'
 import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react'
 import styles from '../../styles'
-import LogInScreen from './LoginScreen';
+import LinearGradient from 'react-native-linear-gradient';
+import SubmitButton from '../../CustomsComponents/submitButton';
+import { forgotPassword } from '../../api';
+
+
+
+
+
 const ForgotPasswordScreen = () => {
   
   const navigation = useNavigation();
 
 
-  
+  const[email, setEmail] = useState('');
   const [showOtp, setShowOtp] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [otp, setOtp] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
-  const handleEmailSubmit = () => {
-      setShowOtp(true);
-  };
+  const handleEmailSubmit = async () => {
+    try {
+        await forgotPassword(email);
+        console.log('Forgot password email sent.');
+  
+        setTimeout(() => {
+          navigation.navigate('LogInScreen');
+        }, 2000);
+      } catch (error) {
+        console.error('Error:', error);
+        Alert.alert('Error', 'Failed to send email.');
+        // Handle error (e.g., show an error message)
+      }
+};
+
 
   const handleOtpSubmit = () => {
       setShowNewPassword(true);
@@ -30,23 +49,27 @@ const handlePasswordSubmit = () => {
 
   return (
       
-      <View style={styles.container} >
-          {!showOtp && (
+<View style={styles.container}>
+    <LinearGradient
+      colors={['purple', 'teal']}
+      start={{ x: 2, y: 0 }}
+      end={{ x: 1, y: 1 }}
+      style={styles.gradient}
+    >
+            {!showOtp && (
               <View>
-                          <Text style={styles.title}>Forgot Password</Text>
+                 <Text style={styles.title}>Forgot Password</Text>
 
                   <TextInput
                       style={styles.input}
-              
-                      onChangeText={(text) => console.log(text)}
+                      onChangeText={setEmail}
                       placeholder="Enter your email"
+                      keyboardType="email-address"
+                      autoCapitalize="none"
+                      autoCorrect={false}
                   />
-                  <TouchableHighlight style={styles.button}>
-                      <Text style={styles.buttontext} onPress={handleEmailSubmit}>
-                          Submit
-                      </Text>
-                  </TouchableHighlight>
-              </View>
+               <SubmitButton title='Submit' onPress={handleEmailSubmit} gradient />
+               </View>
           )}
 
           {showOtp && !showNewPassword && (
@@ -88,7 +111,9 @@ const handlePasswordSubmit = () => {
                   </TouchableHighlight>
               </View>
           )}
-      </View>
+    </LinearGradient>
+    </View>
+
   );
 };
 

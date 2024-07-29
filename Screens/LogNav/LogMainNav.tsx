@@ -8,7 +8,7 @@ import ForgotPasswordScreen from './ForgotPasswordScreen'
 const Stack=createStackNavigator();
 const LogMainNav=()=>{
     return(
-<Stack.Navigator initialRouteName='RegisterUserScreen'>
+<Stack.Navigator initialRouteName='LoginScreen'>
     <Stack.Screen options={{headerShown:false}} name="Login" component={LoginScreen as React.ComponentType} />
     <Stack.Screen options={{headerShown:false}} name='RegisterUserScreen' component={RegisterUserScreen} />
     <Stack.Screen options={{headerShown:false}} name ='ForgotPasswordScreen' component={ForgotPasswordScreen} />

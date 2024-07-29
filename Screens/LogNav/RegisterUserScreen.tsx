@@ -186,8 +186,9 @@
 //     last_name: '',
 //     email: '',
 //     password: '',
-//     confirm_password: '',
-//     gender: '',
+//   
+//       {
+//         i//     gender: '',
 //     phone_no: '',
 //   });
 
@@ -342,40 +343,60 @@
 // export default RegisterUserScreen;
 
 import React from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert, ScrollView, GestureResponderEvent } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { Picker } from '@react-native-picker/picker';
 import { RadioButton } from 'react-native-paper'; // Install @react-native-paper if not already
 import CheckBox from '@react-native-community/checkbox'; // Install @react-native-community/checkbox if not already
-import { registerUser } from '../../api';
+import axios from 'axios';
+import LinearGradient from 'react-native-linear-gradient';
+import styles from '../../styles';
+import SubmitButton from '../../CustomsComponents/submitButton';
+import { StackNavigationProp } from '@react-navigation/stack';
 
 const validationSchema = Yup.object().shape({
-  name: Yup.string()
+  first_name: Yup.string()
     .matches(/^[a-zA-Z]+$/, "Only characters are allowed")
     .min(3, "Minimum 3 characters required")
-    .required("Name is required"),
-  password: Yup.string()
+    .required("First name is required"),
+  last_name: Yup.string()
+    .matches(/^[a-zA-Z]+$/, "Only characters are allowed")
+    .min(3, "Minimum 3 characters required")
+    .required("Last name is required"),
+  email: Yup.string()
+    .email("Invalid email")
+    .required("Email is required"),
+    password: Yup.string()
     .min(6, "Password must be at least 6 characters")
     .matches(/[a-zA-Z]/, "Password must contain at least one letter")
     .matches(/\d/, "Password must contain at least one number")
     .matches(/[!@#$%^&*(),.?":{}|<>]/, "Password must contain at least one special character")
     .required("Password is required"),
+  confirmPassword: Yup.string()
+    .oneOf([Yup.ref('password')], 'Passwords do not match')
+    .required("Confirm Password is required "),
   gender: Yup.string()
     .required("Gender is required"),
+  phone_no: Yup.string()  
+    .matches(/^[0-9]+$/, "Only numbers are allowed")
+    .min(10, "Phone number must be at least 10 digits")
+    .max(10, "Phone number must be at most 10 digits")
+    .required("Phone number is required"),
   termsAccepted: Yup.bool()
     .oneOf([true], "You must accept the terms and conditions")
     .required("You must accept the terms and conditions"),
 });
 
 interface FormValues {
-  name: string;
+  first_name: string;
+  last_name: string;
+  email: string;
   password: string;
+  confirm_password: string;
   gender: string;
+  phone_no: string;
   termsAccepted: boolean;
 }
-
-import { StackNavigationProp } from '@react-navigation/stack';
 
 type RootStackParamList = {
   Login: undefined;
@@ -389,51 +410,95 @@ type RegisterScreenProps = {
 
 const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
   const initialValues: FormValues = {
-    name: '',
+    first_name: '',
+    last_name: '',
+    email: '',
     password: '',
+    confirm_password: '',
     gender: '',
-    termsAccepted: false,
+    phone_no: '',
+    termsAccepted: false
   };
-
+  const registerUser = async (userData: Omit<FormValues, 'termsAccepted'>) => {
+    try {
+      console.log(userData);
+      const response = await axios.post('http://staging.php-dev.in:8844/trainingapp/api/users/register', userData);
+      return response.data;
+    } catch (error: any) {
+      if (error.response) {
+        console.error('Error response data:', error.response.data);
+        console.error('Error response status:', error.response.status);
+        Alert.alert('Error', error.response.data.message || 'An error occurred');
+      } else if (error.request) {
+        console.error('Error request:', error.request);
+        Alert.alert('Error', 'No response received from server');
+      } else {
+        console.error('Error message:', error.message);
+        Alert.alert('Error', error.message);
+      }
+      throw error;
+    }
+  };
   return (
-    <ScrollView style={{ flex: 1 }}>
-      <View style={styles.container}>
+    <View style={styles.container}>
+      <LinearGradient
+        colors={['purple', 'teal']}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 0 }}
+        style={styles.gradient}
+      >
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}
           onSubmit={async (values) => {
-            const userData = {
-              name: values.name,
-              password: values.password,
-              gender: values.gender,
-            };
-            
             try {
-              const data = await registerUser(userData);
-              if (data.status) {
-                Alert.alert('Success', 'User registered successfully');
-                navigation.navigate('Login');
-              } else {
-                Alert.alert('Error', data.user_msg || 'Registration failed');
-              }
+              const { termsAccepted, ...userData } = values;
+              const response = await registerUser(userData);
+              Alert.alert('Success', response.message);
             } catch (error) {
-              Alert.alert('Error', 'There was an error registering the user');
+              console.log(error);
+              Alert.alert('Error', 'Failed to register user');
+              let errorMessage = 'An unknown error occurred while submitting the form';
+              if (error instanceof Error) {
+                errorMessage = error.message;
+              }
+              Alert.alert('Error', errorMessage);
             }
           }}
         >
           {({ handleChange, handleBlur, handleSubmit, setFieldValue, values, errors, touched }) => (
             <View>
-              <Text>Name*</Text>
+              <Text style={styles.title}>NeoUser</Text>
               <TextInput
                 style={styles.input}
-                onChangeText={handleChange('name')}
-                onBlur={handleBlur('name')}
-                value={values.name}
+                placeholder='First Name'
+                onChangeText={handleChange('first_name')}
+                onBlur={handleBlur('first_name')}
+                value={values.first_name}
               />
-              {touched.name && errors.name && <Text style={styles.error}>{errors.name}</Text>}
-              
-              <Text>Password*</Text>
+              {touched.first_name && errors.first_name && <Text style={styles.error}>{errors.first_name}</Text>}
+
               <TextInput
+                style={styles.input}
+                placeholder='Last Name'
+                onChangeText={handleChange('last_name')}
+                onBlur={handleBlur('last_name')}
+                value={values.last_name}
+              />
+              {touched.last_name && errors.last_name && <Text style={styles.error}>{errors.last_name}</Text>}
+
+              <TextInput
+                style={styles.input}
+                placeholder='Email'
+                keyboardType='email-address'
+                onChangeText={handleChange('email')}
+                onBlur={handleBlur('email')}
+                value={values.email}
+              />
+              {touched.email && errors.email && <Text style={styles.error}>{errors.email}</Text>}
+
+              <TextInput
+                placeholder='Password'
                 style={styles.input}
                 secureTextEntry
                 onChangeText={handleChange('password')}
@@ -441,24 +506,44 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
                 value={values.password}
               />
               {touched.password && errors.password && <Text style={styles.error}>{errors.password}</Text>}
-              
-              <Text>Gender*</Text>
+
+              <TextInput
+                placeholder='Confirm Password'
+                style={styles.input}
+                secureTextEntry
+                onChangeText={handleChange('confirm_password')}
+                onBlur={handleBlur('confirm_password')}
+                value={values.confirm_password}
+              />
+              {touched.confirm_password && errors.confirm_password && (
+                <Text style={styles.error}>{errors.confirm_password}</Text>
+              )}
+
               <View style={styles.radioContainer}>
                 <RadioButton
-                  value="male"
+                  value="M"
                   status={values.gender === 'male' ? 'checked' : 'unchecked'}
                   onPress={() => setFieldValue('gender', 'male')}
                 />
                 <Text>Male</Text>
                 <RadioButton
-                  value="female"
+                  value="F"
                   status={values.gender === 'female' ? 'checked' : 'unchecked'}
                   onPress={() => setFieldValue('gender', 'female')}
                 />
                 <Text>Female</Text>
               </View>
               {touched.gender && errors.gender && <Text style={styles.error}>{errors.gender}</Text>}
-              
+
+              <TextInput
+                style={styles.input}
+                placeholder='Phone Number'
+                onChangeText={handleChange('phone_no')}
+                onBlur={handleBlur('phone_no')}
+                value={values.phone_no}
+              />
+              {touched.phone_no && errors.phone_no && <Text style={styles.error}>{errors.phone_no}</Text>}
+
               <View style={styles.checkboxContainer}>
                 <CheckBox
                   value={values.termsAccepted}
@@ -467,40 +552,18 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
                 <Text>I accept the terms and conditions*</Text>
               </View>
               {touched.termsAccepted && errors.termsAccepted && <Text style={styles.error}>{errors.termsAccepted}</Text>}
-              
-              <Button onPress={(event: GestureResponderEvent) => handleSubmit()} title="Submit" />
+
+              <SubmitButton
+                onPress={handleSubmit}
+                title='Submit'
+                gradient
+              />
             </View>
           )}
         </Formik>
-      </View>
-    </ScrollView>
+      </LinearGradient>
+    </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    padding: 30,
-  },
-  input: {
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    marginBottom: 10,
-    paddingLeft: 10,
-  },
-  radioContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  checkboxContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  error: {
-    color: 'red',
-  },
-});
 
 export default RegisterScreen;

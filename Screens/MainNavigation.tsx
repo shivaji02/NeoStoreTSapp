@@ -35,7 +35,7 @@ import HomeMainNav from './HomeNav/HomeMainNav';
 const Stack = createStackNavigator();
 
 const MainNavigation = () => {
-    const isLoggedIn = false;
+    const isLoggedIn = true;
     console.log('Is Logged In:', isLoggedIn);
     return (
         <NavigationContainer>

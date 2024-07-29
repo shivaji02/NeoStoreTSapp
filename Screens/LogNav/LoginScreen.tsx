@@ -7,11 +7,16 @@ import RegisterUserScreen from './RegisterUserScreen';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { loginUser } from '../../api';
+import SubmitButton from '../../CustomsComponents/submitButton'
 import { LogInScreenNavigationProp } from '../mislenous/RootstackParam';
 // Define the type for the RootStackParamList
 import { RootStackParamList } from '../mislenous/RootstackParam';
 // Add a default export for the RootStackParamList type
 export type { RootStackParamList };
+import LinearGradient from 'react-native-linear-gradient';
+
+
+
 
 const LogInScreen= ({navigation}:LogInScreenNavigationProp) => {
 
@@ -21,7 +26,7 @@ console.log('LogInScreen');
   const [password, setPassword] = useState('');
 
   const handleLogin = async () => {
-    console.log('jhfdfhgf5etyfuyguyr5rtyfyuf67r6')
+    console.log('Ateempting to login');
     const userData = {
       email: email,
       password: password,
@@ -37,12 +42,20 @@ console.log('LogInScreen');
         Alert.alert('Error', data.user_msg || 'Login failed');
       }
     } catch (error) {
-      Alert.alert('Error', 'There was an error logging in');
+      Alert.alert('Error', 'There was an error logging in/Login unsuccessful');
     }
   };
-
+  
   return (
+    
     <View style={styles.container}>
+    <LinearGradient
+      colors={['purple', 'teal']}
+      start={{ x: 2, y: 0 }}
+      end={{ x: 1, y: 1 }}
+      style={styles.gradient}
+    >
+  
       <Text style={styles.title}>NeoSTORE</Text>
       <TextInput
         placeholder='email'
@@ -57,9 +70,10 @@ console.log('LogInScreen');
         onChangeText={setPassword}
         secureTextEntry
       />
-      <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        <Text style={styles.buttonText}>Login</Text>
-      </TouchableOpacity>
+     <SubmitButton 
+     title='Login'
+      onPress={handleLogin}
+      gradient />
       <View>
         <Text style={styles.link} onPress={() => navigation.navigate('ForgotPasswordScreen')}>
           Forgot Password?
@@ -68,6 +82,7 @@ console.log('LogInScreen');
           Don't have an account?
         </Text>
       </View>
+    </LinearGradient>
     </View>
   );
 };

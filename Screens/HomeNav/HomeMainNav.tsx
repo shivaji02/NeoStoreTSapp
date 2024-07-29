@@ -1,10 +1,11 @@
 import { View, Text } from 'react-native'
 import React from 'react'
-
+import HomeScreen from './HomeScreen'
 const HomeMainNav = () => {
   return (
     <View style={{flex:1,backgroundColor:'red'}}>
-      <Text>HomeMainNav 909screen1</Text>
+      <Text>HomeMainNav</Text>
+      <HomeScreen/>
     </View>
   )
 }
