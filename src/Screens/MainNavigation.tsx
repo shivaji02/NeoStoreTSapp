@@ -26,36 +26,37 @@
 
 // export default MainNavigation;
 
-import React from 'react';
+import React, { useContext } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
-import LogMainNav from './LogNav/LogMainNav';
-import HomeMainNav from './HomeNav/HomeMainNav';
-
+import { AuthContext } from './LogNav/AuthProvider';
+import LogNavs from './LogNav/LogMainNav';
+import HomeNavs from './HomeNav/HomeMainNav';
+import { AuthProvider } from './LogNav/AuthProvider';
 const Stack = createStackNavigator();
 
 const MainNavigation = () => {
-    const isLoggedIn = true;
-    console.log('Is Logged In:', isLoggedIn);
+    const { isLogged } = useContext(AuthContext) as { isLogged: boolean };
+
     return (
         <NavigationContainer>
             <Stack.Navigator>
-                {isLoggedIn ? (
-                    <Stack.Screen 
-                        name="HomeMainNavScreen" 
-                        component={HomeMainNav} 
-                        options={{ headerShown: false }} 
+                {isLogged ? (
+                    <Stack.Screen
+                        name="HomeNavsScreen"
+                        component={HomeNavs}
+                        options={{ headerShown: false }}
                     />
                 ) : (
-                    <Stack.Screen 
-                        name="LogMainNavScreen" 
-                        component={LogMainNav} 
-                        options={{ headerShown: false }} 
+                    <Stack.Screen
+                        name="LogNavsScreen"
+                        component={LogNavs}
+                        options={{ headerShown: false }}
                     />
                 )}
             </Stack.Navigator>
         </NavigationContainer>
     );
-}
+};
 
 export default MainNavigation;

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, ActivityIndicator, StyleSheet } from 'react-native';
-import { fetchProducts } from '../../api';
-import styles from '../../styles';
+import { fetchProducts } from '../../../api';
+import styles from '../../../styles';
 interface Product {
     id: number;
     name: string;

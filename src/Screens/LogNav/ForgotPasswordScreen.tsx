@@ -1,10 +1,10 @@
 import { View, Text, TextInput, TouchableHighlight, Alert } from 'react-native'
 import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react'
-import styles from '../../styles'
+import styles from '../../../styles'
 import LinearGradient from 'react-native-linear-gradient';
-import SubmitButton from '../../CustomsComponents/submitButton';
-import { forgotPassword } from '../../api';
+import SubmitButton from '../../../CustomsComponents/submitButton';
+import { forgotPassword } from '../../../api';
 
 
 
@@ -23,12 +23,13 @@ const ForgotPasswordScreen = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
 
   const handleEmailSubmit = async () => {
+   
     try {
         await forgotPassword(email);
         console.log('Forgot password email sent.');
-  
+        
         setTimeout(() => {
-          navigation.navigate('LogInScreen');
+          navigation.navigate('Login');
         }, 2000);
       } catch (error) {
         console.error('Error:', error);

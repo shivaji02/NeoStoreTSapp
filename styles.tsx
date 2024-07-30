@@ -10,96 +10,96 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         alignContent: 'center',
-        
+
     },
-    
+
     scrlv: {
         flex: 1,
         backgroundColor: 'tomato',
-     },
-    title:{
-        fontSize:30,
-        fontWeight:'bold',
-        color:'white'
     },
-    buttonText:{
-        fontSize:18,
-        color:'white',
+    title: {
+        fontSize: 30,
+        fontWeight: 'bold',
+        color: 'black'
+    },
+    buttonText: {
+        fontSize: 18,
+        color: 'white',
         textAlign: 'center', // Add this line to center the text horizontally
         width: 60,
-        
+
     },
-    corosel:{
-        width:350,
-        height:200,
-        borderRadius:10,
-        margin:10
+    corosel: {
+        width: 350,
+        height: 200,
+        borderRadius: 10,
+        margin: 10
     },
     carouselItem: {
         width: 300, // Adjust the width as needed
         height: 200, // Adjust the height as needed
         justifyContent: 'center',
         alignItems: 'center',
-      },
-     
+    },
+
     linearGradient: {
         flex: 1,
         paddingLeft: 15,
         paddingRight: 15,
         borderRadius: 5,
-          height:30
-        
+        height: 30
+
     },
-    button:{
-        backgroundColor:'#04393c',
-        padding:10,
-        margin:10,
-        borderRadius:10
+    button: {
+        backgroundColor: '#04393c',
+        padding: 10,
+        margin: 10,
+        borderRadius: 10
     },
-    buttontext:{   
-        fontSize:20,
-        color:'white'
-     },
-    input:{
-        backgroundColor:'gray',
-        padding:10,
-        margin:8,
-        borderRadius:10,
-        width:270
+    buttontext: {
+        fontSize: 20,
+        color: 'white'
     },
-    inputContainer:{
-        padding:10,
-        margin:10,
-        borderRadius:10
+    input: {
+        backgroundColor: 'gray',
+        padding: 10,
+        margin: 8,
+        borderRadius: 10,
+        width: 270
     },
-    inputText:{
-        fontSize:20,
-        color:'black'
+    inputContainer: {
+        padding: 10,
+        margin: 10,
+        borderRadius: 10
     },
-    icon:{
-        color:'black',
-        fontSize:5
+    inputText: {
+        fontSize: 20,
+        color: 'black'
     },
-    link:{
-        margin:2,
-        color:'orange',  
+    icon: {
+        color: 'black',
+        fontSize: 5
+    },
+    link: {
+        margin: 2,
+        color: 'orange',
     },
     checkboxView: {
         marginTop: 10,
-    
+
         flexDirection: 'row',
-    
+
         alignItems: 'center',
-    
+
     },
-    
+
     checkbox: {
         alignSelf: 'flex-start',
     },
-    error:{
-        color:'teal',
-        fontSize:10,
-        marginLeft:10
+    error: {
+        color: 'teal',
+        fontSize: 10,
+        marginLeft: 10
 
     },
     listContainer: {
@@ -110,12 +110,12 @@ const styles = StyleSheet.create({
         padding: 15,
         marginVertical: 8,
         borderRadius: 5,
-        
+
     },
     image: {
         width: 350,
         height: 200,
-        borderRadius: 10,   
+        borderRadius: 10,
     },
     itemName: {
         fontSize: 18,
@@ -134,71 +134,67 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         marginBottom: 5,
-      },
-      checkboxContainer: {
+    },
+    checkboxContainer: {
         flexDirection: 'row',
         alignItems: 'center',
         marginBottom: 10,
-      },
-      
-    forgotPassword:{
-        color:'blue',
-        fontSize:20
     },
-    register:{
-        color:'blue',
-        fontSize:20
+
+    forgotPassword: {
+        color: 'blue',
+        fontSize: 20
     },
-    otp:{
-        color:'blue',
-        fontSize:20
+    register: {
+        color: 'blue',
+        fontSize: 20
     },
-    otpContainer:{
-        backgroundColor:'white',
-        padding:10,
-        margin:10,
-        borderRadius:10
+    otp: {
+        color: 'blue',
+        fontSize: 20
     },
-    otpInput:{
-        backgroundColor:'gray',
-        padding:10,
-        margin:8,
-        borderRadius:10,
-        width:200
+    otpContainer: {
+        backgroundColor: 'white',
+        padding: 10,
+        margin: 10,
+        borderRadius: 10
     },
-    otpButton:{
-        backgroundColor:'#04393c',
-        padding:10,
-        margin:10,
-        borderRadius:10
+    otpInput: {
+        backgroundColor: 'gray',
+        padding: 10,
+        margin: 8,
+        borderRadius: 10,
+        width: 200
     },
-    otpButtonText:{
-        fontSize:20,
-        color:'white'
+    otpButton: {
+        backgroundColor: '#04393c',
+        padding: 10,
+        margin: 10,
+        borderRadius: 10
     },
-    otpText:{
-        fontSize:20,
-        color:'black'
+    otpButtonText: {
+        fontSize: 20,
+        color: 'white'
     },
-    CheckboxItem:{
-        backgroundColor:'gray',
-        padding:10,
-        margin:8,
-        borderRadius:10,
-        width:200
+    otpText: {
+        fontSize: 20,
+        color: 'black'
+    },
+    CheckboxItem: {
+        backgroundColor: 'gray',
+        padding: 10,
+        margin: 8,
+        borderRadius: 10,
+        width: 200
     },
     gradient: {
-
-    width: '100%',
-    height: '100%',
+        width: '100%',
+        height: '100%',
         justifyContent: 'center',
-    
         alignItems: 'center',
-    
         borderRadius: 5,
-    
-      },
-    
+    },
+
 });
 
 

@@ -343,48 +343,49 @@
 // export default RegisterUserScreen;
 
 import React from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, Alert, ActivityIndicator } from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { RadioButton } from 'react-native-paper'; // Install @react-native-paper if not already
 import CheckBox from '@react-native-community/checkbox'; // Install @react-native-community/checkbox if not already
 import axios from 'axios';
 import LinearGradient from 'react-native-linear-gradient';
-import styles from '../../styles';
-import SubmitButton from '../../CustomsComponents/submitButton';
+import styles from '../../../styles';
+import SubmitButton from '../../../CustomsComponents/submitButton';
 import { StackNavigationProp } from '@react-navigation/stack';
+import LogInScreen from './LoginScreen';
 
 const validationSchema = Yup.object().shape({
   first_name: Yup.string()
     .matches(/^[a-zA-Z]+$/, "Only characters are allowed")
     .min(3, "Minimum 3 characters required")
-    .required("First name is required"),
+   .required("First name is required"),
   last_name: Yup.string()
     .matches(/^[a-zA-Z]+$/, "Only characters are allowed")
     .min(3, "Minimum 3 characters required")
-    .required("Last name is required"),
+   .required("Last name is required"),
   email: Yup.string()
-    .email("Invalid email")
-    .required("Email is required"),
-    password: Yup.string()
+     .email("Invalid email")
+     .required("Email is required"),
+  password: Yup.string()
     .min(6, "Password must be at least 6 characters")
     .matches(/[a-zA-Z]/, "Password must contain at least one letter")
     .matches(/\d/, "Password must contain at least one number")
     .matches(/[!@#$%^&*(),.?":{}|<>]/, "Password must contain at least one special character")
-    .required("Password is required"),
-  confirmPassword: Yup.string()
-    .oneOf([Yup.ref('password')], 'Passwords do not match')
-    .required("Confirm Password is required "),
+   .required("Password is required"),
+  confirm_password: Yup.string()
+   .oneOf([Yup.ref('password')], 'Passwords do not match')
+   .required("Confirm Password is required "),
   gender: Yup.string()
-    .required("Gender is required"),
-  phone_no: Yup.string()  
+   .required("Gender is required"),
+  phone_no: Yup.string() 
     .matches(/^[0-9]+$/, "Only numbers are allowed")
     .min(10, "Phone number must be at least 10 digits")
     .max(10, "Phone number must be at most 10 digits")
     .required("Phone number is required"),
   termsAccepted: Yup.bool()
     .oneOf([true], "You must accept the terms and conditions")
-    .required("You must accept the terms and conditions"),
+   .required("You must accept the terms and conditions"),
 });
 
 interface FormValues {
@@ -417,13 +418,30 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
     confirm_password: '',
     gender: '',
     phone_no: '',
-    termsAccepted: false
+    termsAccepted: false,
   };
+
   const registerUser = async (userData: Omit<FormValues, 'termsAccepted'>) => {
+    console.log('Attempting to register');
     try {
-      console.log(userData);
-      const response = await axios.post('http://staging.php-dev.in:8844/trainingapp/api/users/register', userData);
+      const formData = new FormData();
+      formData.append('first_name', userData.first_name);
+      formData.append('last_name', userData.last_name);
+      formData.append('email', userData.email);
+      formData.append('password', userData.password);
+      formData.append('confirm_password', userData.confirm_password);
+      formData.append('gender', userData.gender);
+      formData.append('phone_no', userData.phone_no);
+// console.log("formData---",formData);
+
+      const response = await axios.post('http://staging.php-dev.in:8844/trainingapp/api/users/register', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      console.log(response.data);
       return response.data;
+      
     } catch (error: any) {
       if (error.response) {
         console.error('Error response data:', error.response.data);
@@ -439,11 +457,13 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
       throw error;
     }
   };
+
+  
   return (
     <View style={styles.container}>
       <LinearGradient
-        colors={['purple', 'teal']}
-        start={{ x: 0, y: 0 }}
+        colors={['purple', 'teal']} //add colors more in array and see effect
+        start={{ x: 0, y: 1 }}
         end={{ x: 1, y: 0 }}
         style={styles.gradient}
       >
@@ -453,8 +473,15 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
           onSubmit={async (values) => {
             try {
               const { termsAccepted, ...userData } = values;
+              console.log(userData);
               const response = await registerUser(userData);
               Alert.alert('Success', response.message);
+                setTimeout(() => {
+                navigation.navigate('Login');
+                }, 1000);
+                return (
+                <ActivityIndicator size="large" color="purple" />
+                );
             } catch (error) {
               console.log(error);
               Alert.alert('Error', 'Failed to register user');
@@ -465,10 +492,13 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
               Alert.alert('Error', errorMessage);
             }
           }}
+        //  onSubmit={values => console.log('😘😘😘😘😘😘😘',values)}
         >
           {({ handleChange, handleBlur, handleSubmit, setFieldValue, values, errors, touched }) => (
             <View>
-              <Text style={styles.title}>NeoUser</Text>
+
+            <Text style={styles.title}>NeoUser</Text>
+           
               <TextInput
                 style={styles.input}
                 placeholder='First Name'
