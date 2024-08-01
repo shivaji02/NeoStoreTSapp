@@ -3,7 +3,7 @@ import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react'
 import styles from '../../../styles'
 import LinearGradient from 'react-native-linear-gradient';
-import SubmitButton from '../../../CustomsComponents/submitButton';
+import SubmitButton from '../../CustomsComponents/submitButton';
 import { forgotPassword } from '../../../api';
 
 

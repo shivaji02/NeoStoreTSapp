@@ -351,7 +351,7 @@ import CheckBox from '@react-native-community/checkbox'; // Install @react-nativ
 import axios from 'axios';
 import LinearGradient from 'react-native-linear-gradient';
 import styles from '../../../styles';
-import SubmitButton from '../../../CustomsComponents/submitButton';
+import SubmitButton from '../../CustomsComponents/submitButton';
 import { StackNavigationProp } from '@react-navigation/stack';
 import LogInScreen from './LoginScreen';
 

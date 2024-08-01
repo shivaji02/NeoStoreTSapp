@@ -3,21 +3,18 @@ import React from 'react'
 import HomeScreen from './HomeScreen'
 import styles from '../../../styles';
 import LinearGradient from 'react-native-linear-gradient';
-const HomeMainNav = () => {
+import { createStackNavigator } from '@react-navigation/stack';
+import DrawerList from '../DrawerNav/DrawerList';
+
+const Stack = createStackNavigator();
+
+const HomeMainNav: React.FC = () => {
   return (
-    <View style={{flex:1,backgroundColor:'red'}}>
-  <LinearGradient
-      colors={['purple', 'teal']}
-      start={{ x: 2, y: 0 }}
-      end={{ x: 1, y: 1 }}
-      style={styles.gradient}
-    >
-   
-      <Text>HomeMainNav</Text>
-      <HomeScreen/>
-      </LinearGradient>
-    </View>
-  )
-}
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="Main" component={HomeScreen} />
+        <Stack.Screen name="Drawer" component={DrawerList} />
+      </Stack.Navigator>
+  );
+};
 
 export default HomeMainNav;

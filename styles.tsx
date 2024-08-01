@@ -1,18 +1,54 @@
 import { StyleSheet } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
-import { Icon } from 'react-native-paper';
-import CheckboxItem from 'react-native-paper/lib/typescript/components/Checkbox/CheckboxItem';
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'tomato',
         alignItems: 'center',
         justifyContent: 'center',
         alignContent: 'center',
+        backgroundColor: 'rgba(255, 171, 0, 0.64)', 
 
     },
+    headerContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        padding: 16,
+        backgroundColor: 'transparent',
+    },
+    contentContainer: {
+        alignItems: 'center',
+        paddingVertical: 20,
 
+      },
+      colourheading: {
+        color:'#377DFF',
+        fontFamily: 'Poppins',
+        fontSize: 40,
+        fontWeight: 'bold',
+
+    },
+      heading: {
+        fontSize: 40,
+        color: 'black',
+        textAlign: 'center',
+        fontFamily: 'Poppins',
+        fontWeight: 'bold',
+
+      },
+      subheading: {
+        fontSize: 40,
+        fontFamily: 'Poppins',
+        color: 'black',
+        fontWeight: 'bold',
+
+      },
+      description: {
+        fontSize: 16,
+        color: 'black',
+        marginVertical: 10,
+        textAlign: 'center',
+      },
     scrlv: {
         flex: 1,
         backgroundColor: 'tomato',

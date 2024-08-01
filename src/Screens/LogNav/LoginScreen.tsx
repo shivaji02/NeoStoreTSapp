@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import styles from '../../../styles';
 import {loginUser} from '../../../api';
-import SubmitButton from '../../../CustomsComponents/submitButton';
+import SubmitButton from '../../CustomsComponents/submitButton';
 import { LogInScreenNavigationProp } from '../mislenous/RootstackParam';
 import LinearGradient from 'react-native-linear-gradient';
 

@@ -1,22 +1,61 @@
-import { View, Text } from 'react-native'
-import React from 'react'
-import LinearGradient from 'react-native-linear-gradient';
-import Carasoul from './Corousel'
-import styles from '../../../styles'
-const HomeScreen = () => {
+import React, { Component } from 'react'
+import styles from '../../../styles';
+import { Text,View, StyleSheet, Image, ScrollView } from 'react-native';
+import CustomButton from '../../CustomsComponents/customButton';
+import Header from '../../CustomsComponents/Header';
+// import DrawerList from '../DrawerNav/DrawerList';
+import { useNavigation } from '@react-navigation/native'; // Import the useNavigation hook
+import { Drawer } from 'react-native-paper';
+
+// import { Navigation } from 'react-native-navigation'; // Import the Navigation module
+
+const HomeScreen: React.FC<{ComponentId:string}> = () => {
+  const navigation = useNavigation();
+
+  const handleButtonPress = () => {
+    console.log('Button Pressed');
+  };
+
+  const handleDrawerPress = () => {
+    console.log('Drawer opened');
+    navigation.openDrawer(DrawerList);
+      };
+
+  const handleCartPress = () => {
+    console.log('Cart opened');
+  };
+
   return (
-    <View style={styles.container}>
-       <LinearGradient
-      colors={['purple', 'teal']}
-      start={{ x: 2, y: 0 }}
-      end={{ x: 1, y: 1 }}
-      style={styles.gradient}
-    >
-        <Carasoul/>
-      {/* <Text>Home Screen</Text> */}
-      </LinearGradient>
-    </View>
-  )
-}
+    <ScrollView contentContainerStyle={styles.container}>
+      <Header 
+        onDrawerPress={handleDrawerPress}
+        onCartPress={handleCartPress}
+        cartItemCount={0}
+      />
+      <View style={styles.contentContainer}>
+        <Text style={styles.heading}>Feel All</Text>
+        <Text style={styles.subheading}>New 
+          <Text style={styles.colourheading}> Amazing</Text> </Text>
+        <Text style={styles.heading}>Furniture</Text>
+        <Text style={styles.description}>Redefining simplicity and comfort </Text>
+
+        <Image
+          source={ require('../../Assets.xcassets/Images/couch1.png') }
+          style={styles.image}
+          resizeMode="cover"
+        />
+        <CustomButton
+          text="Explore Now"
+          onPress={handleButtonPress}
+          height={60}
+          width={240}
+          backgroundColor="black"
+          textColor="white"
+        />
+      </View>
+
+    </ScrollView>
+  );
+};
 
 export default HomeScreen;

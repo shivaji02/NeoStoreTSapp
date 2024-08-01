@@ -42,7 +42,7 @@ export default Carousel;
 // styles.js (for reference, ensure you have these styles defined)
 const styles = StyleSheet.create({
   carouselItem: {
-    width: '100%', // set width to 100% to occupy the full width of the screen
+    width: 400, // set width to 100% to occupy the full width of the screen
     height: 200, // or any height suitable for your layout
     justifyContent: 'center',
     alignItems: 'center',
