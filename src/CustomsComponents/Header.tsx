@@ -19,7 +19,7 @@ const Header: React.FC<HeaderProps> = ({ title = 'NeoStore', cartItemCount = 0, 
       <Text style={styles.title}>{title}</Text>
       </View>
       <TouchableOpacity style={styles.cartIcon} onPress={onCartPress}>
-        <Image source={require('../Assets.xcassets/Images/shoppingCart.png')} style={styles.Carticon} />
+        <Image source={require('../Assets.xcassets/Images/cartIcon.png')} style={styles.Carticon} />
         {cartItemCount > 0 && (
           <View style={styles.badge}>
             <Text style={styles.badgeText}>{cartItemCount}</Text>

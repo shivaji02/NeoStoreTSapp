@@ -5,8 +5,7 @@ import CustomButton from '../../CustomsComponents/customButton';
 import Header from '../../CustomsComponents/Header';
 // import DrawerList from '../DrawerNav/DrawerList';
 import { useNavigation } from '@react-navigation/native'; // Import the useNavigation hook
-import { Drawer } from 'react-native-paper';
-
+import DrawerList from '../DrawerNav/DrawerList';
 // import { Navigation } from 'react-native-navigation'; // Import the Navigation module
 
 const HomeScreen: React.FC<{ComponentId:string}> = () => {
@@ -15,9 +14,9 @@ const HomeScreen: React.FC<{ComponentId:string}> = () => {
   const handleButtonPress = () => {
     console.log('Button Pressed');
   };
-
   const handleDrawerPress = () => {
     console.log('Drawer opened');
+    //@ts-ignore
     navigation.openDrawer(DrawerList);
       };
 

@@ -102,11 +102,22 @@ android {
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
     }
+    
+    android {
+        defaultConfig {
+            multiDexEnabled true
+        }
+        configurations.all {
+            exclude group: 'com.facebook.react', module: 'react-native-masked-view'
+            exclude group: 'com.facebook.react', module: '@react-native-community/masked-view'
+        }
+    }
 }
 
 dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
+    implementation 'com.android.support:multidex:2.0.1'
 
     if (hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")
