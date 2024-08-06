@@ -61,12 +61,12 @@ const handlePasswordSubmit = () => {
   return (
       
 <View style={styles.container}>
-    <LinearGradient
+    {/* <LinearGradient
       colors={['purple', 'teal']}
       start={{ x: 2, y: 0 }}
       end={{ x: 1, y: 1 }}
       style={styles.gradient}
-    >
+    > */}
             {!showOtp && (
               <View>
                  <Text style={styles.title}>Forgot Password</Text>
@@ -122,7 +122,7 @@ const handlePasswordSubmit = () => {
                   </TouchableHighlight>
               </View>
           )}
-    </LinearGradient>
+    {/* </LinearGradient> */}
     </View>
 
   );

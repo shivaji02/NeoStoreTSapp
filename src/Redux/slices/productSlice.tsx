@@ -3,7 +3,7 @@ import axios from 'axios';
 import { RootState } from "../store";
 import axiosInstance from "../../Screens/mislenous/axiosInstance";
 
-interface ProductState { 
+ export interface ProductState { 
     products:any[];
     productDetails:any | null;
     loading:boolean;

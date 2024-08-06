@@ -1,15 +1,21 @@
-import React, { Component } from 'react'
+import React, { Component, useState } from 'react'
 import styles from '../../../styles';
-import { Text,View, StyleSheet, Image, ScrollView } from 'react-native';
+import { Text,View,ScrollView, Image } from 'react-native';
 import CustomButton from '../../CustomsComponents/customButton';
 import Header from '../../CustomsComponents/Header';
 // import DrawerList from '../DrawerNav/DrawerList';
 import { useNavigation } from '@react-navigation/native'; // Import the useNavigation hook
 import DrawerList from '../DrawerNav/DrawerList';
+import CustomDrawer from '../HomeNav/ScreenComponents/CustomDrawer';
+// import  {ScrollView} from 'react-native-gesture-handler';
+
+// Add the correct path to the 'ProductList' module
+import ProductList from './ScreenComponents/ProducCategory';
 // import { Navigation } from 'react-native-navigation'; // Import the Navigation module
 
 const HomeScreen: React.FC<{ComponentId:string}> = () => {
   const navigation = useNavigation();
+  const [isDrawerVisible, setDrawerVisible] = useState(false);
 
   const handleButtonPress = () => {
     console.log('Button Pressed');
@@ -17,20 +23,26 @@ const HomeScreen: React.FC<{ComponentId:string}> = () => {
   const handleDrawerPress = () => {
     console.log('Drawer opened');
     //@ts-ignore
-    navigation.openDrawer(DrawerList);
-      };
+    setDrawerVisible(!isDrawerVisible);
+    
+  };
 
   const handleCartPress = () => {
     console.log('Cart opened');
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Header 
+    <View style={styles.container}>
+    <Header 
         onDrawerPress={handleDrawerPress}
         onCartPress={handleCartPress}
-        cartItemCount={0}
+        cartItemCount={5}
+
       />
+      <CustomDrawer isVisible={isDrawerVisible} onClose={() => setDrawerVisible(false)} />
+
+    <ScrollView >
+      
       <View style={styles.contentContainer}>
         <Text style={styles.heading}>Feel All</Text>
         <Text style={styles.subheading}>New 
@@ -52,8 +64,11 @@ const HomeScreen: React.FC<{ComponentId:string}> = () => {
           textColor="white"
         />
       </View>
+      <ProductList />
+      <ProductList />
 
     </ScrollView>
+  </View>
   );
 };
 

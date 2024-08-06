@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
     },
     contentContainer: {
         alignItems: 'center',
-        paddingVertical: 20,
+        // paddingVertical: 20,
 
       },
       colourheading: {
@@ -71,27 +71,22 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         margin: 10
     },
-    carouselItem: {
-        width: 300, // Adjust the width as needed
-        height: 200, // Adjust the height as needed
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
+    // carouselItem: {
+    //     width: 300, // Adjust the width as needed
+    //     height: 200, // Adjust the height as needed
+    //     justifyContent: 'center',
+    //     alignItems: 'center',
+    // },
 
-    linearGradient: {
-        flex: 1,
-        paddingLeft: 15,
-        paddingRight: 15,
-        borderRadius: 5,
-        height: 30
+    // linearGradient: {
+    //     flex: 1,
+    //     paddingLeft: 15,
+    //     paddingRight: 15,
+    //     borderRadius: 5,
+    //     height: 30
 
-    },
-    button: {
-        backgroundColor: '#04393c',
-        padding: 10,
-        margin: 10,
-        borderRadius: 10
-    },
+    // },
+    
     buttontext: {
         fontSize: 20,
         color: 'white'
@@ -118,7 +113,7 @@ const styles = StyleSheet.create({
     },
     link: {
         margin: 2,
-        color: 'orange',
+        color: 'red',
     },
     checkboxView: {
         marginTop: 10,
@@ -229,6 +224,13 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 5,
+    },
+    instructionText: {
+            marginTop: 20,
+            fontSize: 16,
+            color: '#333',
+            textDecorationLine: 'underline',
+            textAlign: 'center',
     },
 
 });

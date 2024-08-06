@@ -4,10 +4,11 @@ import axiosInstance from "../../Screens/mislenous/axiosInstance";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface AuthState{
- user : any|null;
- isAuthenticated:boolean;
+    user : any|null;
+    isAuthenticated:boolean;
     loading:boolean;
     error:string|null;
+    access_token: string|null; // Add access_token property
 }
 
 const initialState:AuthState = {
@@ -16,6 +17,19 @@ const initialState:AuthState = {
     loading:false,
     error:null,
 };
+
+
+
+export const initializeAuth = createAsyncThunk(
+    'auth/initializeAuth',
+    async (_, { dispatch }) => {
+      const token = await AsyncStorage.getItem('access_token');
+      if (token) {
+        dispatch(authSlice.actions.setAuth({ accessToken: token, isAuthenticated: true }));
+      }
+    }
+  );
+
 
 export const registerUser = createAsyncThunk(
     'auth/registerUser',
@@ -31,17 +45,36 @@ export const registerUser = createAsyncThunk(
 
 export const loginUser = createAsyncThunk(
     'auth/loginUser',
-    async (credentials:any,{rejectWithValue})=>{
+    async ({formData,navigation}:{formData: any, navigation: any},{rejectWithValue})=>{
         try{
-            const response = await axiosInstance.post('users/login',credentials);
+            const formdatas = new FormData();
+            formdatas.append('email',formData.email);
+            formdatas.append('password',formData.password);
+            console.log('formData 123' , formData);
+            console.log(formdatas,"formdatas");
+            const response = await axiosInstance.post('/users/login',formdatas);
+
+            console.log('Response',response.data);
+            console.log('Response Data',response.data.access_token);
+            const data = response.data.data;
             // Store the access token in local storage
             await AsyncStorage.setItem('access_token', response.data.access_token);
-            return response.data.data;
+            navigation.navigate('HomeNavsScreen');
+            
             
         } catch(error:any){
+            console.log("Error in llogin", error)
+            if (error.isAxiosError && !error.response) {
+                return rejectWithValue('Network Error');
+            }
             return rejectWithValue(error.response?.data?.message|| 'Failed to Login' );
         }
     });
+
+
+
+
+
 
     export const forgotPassword = createAsyncThunk(
         'auth/forPassword',
@@ -85,6 +118,12 @@ const authSlice = createSlice({
             state.user = null;
             state.isAuthenticated = false;
             state.error = null;
+            AsyncStorage.removeItem('access_token');
+
+        },
+        setAuth: (state, action) => {
+            state.access_token = action.payload.accessToken;
+            state.isAuthenticated = action.payload.isAuthenticated;
         },
         extraReducers:(builder)=>{
             builder

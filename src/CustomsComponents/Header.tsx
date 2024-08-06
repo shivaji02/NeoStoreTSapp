@@ -34,18 +34,16 @@ const styles = StyleSheet.create({
   headerContainer: {
     flexDirection: 'row',
     padding: 16,
-    // backgroundColor: 'transparent',
-    // backgroundColor: 'rgba(255, 171, 0, 0.64)',
-    position: 'absolute',
+    backgroundColor: 'transparent',
+    position: 'static',
     top: 0,
     left: 0,
-    right: 0,
-    zIndex: 999,
+    right: 0, 
+    justifyContent: 'space-evenly',
+    gap: 150,
+    marginTop:5,
   },
-  Drawicon: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-  },
+  
   title: {
     color: 'black',
     fontSize: 24,
@@ -55,8 +53,7 @@ const styles = StyleSheet.create({
   },
   cartIcon: {
     marginLeft: 'auto',
-    alignItems: 'center',
-    justifyContent: 'center',
+    
   },
   badge: {
     position: 'absolute',
@@ -82,10 +79,17 @@ const styles = StyleSheet.create({
     width: 50,
     height: 28,
   },
+  Drawicon: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
+    
+  },
   Carticon: {
-    width: 50,
-    height: 36,
-    marginRight:-5,
+    width: 45,
+    height: 35,
+    marginTop:-5,
+    
   },
 });
 

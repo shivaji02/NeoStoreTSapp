@@ -6,6 +6,7 @@ import MainNavigation from './src/Screens/MainNavigation';
 const App: React.FC = () => {
   console.log('Rendering App with Provider');
 
+  
 
   return (
     <Provider store={store}>

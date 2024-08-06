@@ -10,6 +10,7 @@ interface CustomButtonProps {
   textColor?: string;
 }
 
+
 const CustomButton: React.FC<CustomButtonProps> = ({
   height = 50,
   width = 200,
@@ -19,7 +20,7 @@ const CustomButton: React.FC<CustomButtonProps> = ({
   textColor = 'white',
 }) => {
   return (
-    <TouchableOpacity
+    <TouchableOpacity 
       style={[styles.button, { height, width, backgroundColor }]}
       onPress={onPress}
     >

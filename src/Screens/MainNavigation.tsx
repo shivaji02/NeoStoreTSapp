@@ -34,7 +34,7 @@ import LogNavs from './LogNav/LogMainNav';
 import HomeNavs from './HomeNav/HomeMainNav';
 import { AuthProvider } from './LogNav/AuthProvider';
 import { useDispatch,useSelector} from 'react-redux';
-import {selectAuth} from '../Redux/slices/authSlice';
+import {initializeAuth,selectAuth} from '../Redux/slices/authSlice';
 
 const Stack = createStackNavigator();
 
@@ -43,10 +43,10 @@ const MainNavigation = () => {
     // const { isLogged } = useContext(AuthContext) as { isLogged: boolean };
     const dispatch = useDispatch();
     const { isAuthenticated } = useSelector(selectAuth);
-
+    
     useEffect(() => {
-      dispatch({ type: 'auth/loginUser' }); // This line might need adjustment based on your action initialization
-    }, [dispatch]);
+        dispatch(initializeAuth()); // Initialize auth state on app start
+      }, [dispatch]);
   
     return (
         <NavigationContainer>
