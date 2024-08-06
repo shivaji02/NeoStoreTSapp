@@ -1,30 +1,50 @@
 import { View, Text, TextInput, Alert } from 'react-native';
 import React, { useState } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import styles from '../../../styles';
-import {loginUser} from '../../../api';
 import SubmitButton from '../../CustomsComponents/submitButton';
 import { LogInScreenNavigationProp } from '../mislenous/RootstackParam';
 import LinearGradient from 'react-native-linear-gradient';
+import { useDispatch } from 'react-redux';
+import { loginUser } from '../../Redux/slices/authSlice';
+import HomeMainNav from '../HomeNav/HomeMainNav';
+import { ActivityIndicator } from 'react-native-paper';
+// types.ts
+export interface LoginForm {
+  email: string;
+  password: string;
+}
 
+export interface LoginResponse {
+  token: string;
+  user: {
+    id: string;
+    email: string;
+  };
+}
+
+export interface RootState {
+  auth: {
+    user: LoginResponse | null;
+    loading: boolean;
+    error: string | null;
+  };
+}
 
 const LogInScreen = ({ navigation }: LogInScreenNavigationProp) => {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
   });
+  const dispatch =  useDispatch();
   const handleLogin = async () => {
     try {
       console.log('Form Data: ', formData); // Log form data before sending
-      const response = await loginUser(formData);
-      console.log('Response: ', response);
-      if (response.status === 200) {
-        await AsyncStorage.setItem('access_token', response.data.access_token);
-        navigation.navigate('HomeMainNav');
-        Alert.alert('Success', response.user_msg);
-      } else {
-        Alert.alert('Error', response.message || 'Login failed');
-      }
+       dispatch(loginUser(formData ))
+      setTimeout(() => {
+        <ActivityIndicator animating={true} color="red" />
+        Alert.alert('Success', 'Login Successful');
+      }, 1000);
+      navigation.navigate('HomeNavsScreen');
     } catch (error:any) {
       console.error('Error Response: ', error.response ? error.response.data : error.message);
       Alert.alert('Error', error.response?.data?.message || 'Something went wrong');

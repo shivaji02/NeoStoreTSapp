@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Dispatch } from "@reduxjs/toolkit";
-import { addToCart,removeFromCart } from "../reducers/cartReducer";
+import { addToCart,removeFromCart } from "../slices/cartSlice";
 
 export const addItemToCart = (product:any)=>async (dispatch:Dispatch)=>{
     dispatch(addToCart(product));

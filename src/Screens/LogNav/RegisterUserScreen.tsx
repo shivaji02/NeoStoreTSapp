@@ -1,346 +1,3 @@
-// // // import { View, Text } from 'react-native'
-// // // import React from 'react'
-// // // import styles from '../../styles'
-
-// // // const RegisterUserScreen = () => {
-// // //   return (
-// // //     <View style={styles.container}>
-// // //       <Text>RegisterUserScreen</Text>
-// // //     </View>
-// // //   )
-// // // }
-
-// // // export default RegisterUserScreen
-
-// // import React, { isValidElement } from 'react'
-// // import { View, Text, TextInput, TouchableOpacity, Alert,ScrollView,Keyboard ,KeyboardAvoidingView} from 'react-native'
-// // import styles from '../../../styles'
-// // import  { useMemo, useState } from 'react';
-// // import RadioGroup from 'react-native-radio-buttons-group';
-// // import CheckBox from '@react-native-community/checkbox';
-// // import { Platform } from 'react-native';
-// // import {regUser} from '../../../api';
-
-// // const RegisterUserScreen = ({ navigation }) => {
-// //     const [userData, setUserData] = useState({
-// //         first_name: '',
-// //         last_name: '',
-// //         email: '',
-// //         password: '',
-// //         confirm_password: '',
-// //     });
-
-// //     const handleInputChange = (name: string, value: any) => {
-// //         setUserData(prevState => ({
-// //             ...prevState,
-// //             [name]: value
-// //         }));
-// //     };
-
-// //     const { first_name, last_name, email, password, confirm_password, gender } = userData;
-
-// //     const [isSelected, setSelection] = useState(false);
-// //     const radioButtonsData = useMemo(() => ([
-// //         {
-// //             id: '1',
-// //             label :'male',
-// //             value :'Male',
-// //         },
-// //         {
-// //             id: '2',
-// //             label:'female',
-// //             value:'Female',
-// //         }
-// //     ]),[]);
-// //     const [selectedId, setSelectedId] = useState();
-// //     const [errorMessage, setErrorMessage] = useState(''); // Add errorMessage state variable
-
-// //     const handleRegister = async () => {
-// //         const userData ={
-// //             first_name,
-// //             last_name,
-// //             email,
-// //             password,
-// //             confirm_password,
-// //             gender,
-// //             phone_no,
-// //         };
-
-// //         try{
-// //             const response = await regUser(userData);
-// //             Alert.alert('Success', response.message);
-// //         }
-// //         catch(error){
-// //             Alert.alert('Error', error.message);
-// //         }
-// //     };
-
-// //     return (
-// //         <KeyboardAvoidingView style={{enabled:'true',keyboardVerticalOffset:2}}>
-// //             <ScrollView> 
-// //             <View style={styles.container}>
-// //             <Text style={styles.title}>NeoSTORE</Text>
-                    
-// //             <TextInput style={styles.input} placeholder='First Name' onChangeText={text => {
-// //                 if (/^[a-zA-Z]+$/.test(text)) {
-// //                     // Valid input
-// //                 } else {
-// //                     setErrorMessage('Invalid input! Please enter only letters.');
-// //                 }
-// //             }} />
-        
-// //             <TextInput style={styles.input} placeholder='Last Name' onChangeText={text => {
-// //                 if (/^[a-zA-Z]+$/.test(text)) {
-// //                     // Valid input
-// //                 } else {
-// //                     setErrorMessage('Invalid input! Please enter only letters.');
-// //                 }
-// //             }} />
-        
-// //             <TextInput style={styles.input} placeholder='Email' onChangeText={text => {
-// //                 if (/^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/.test(text)) {
-// //                     // Valid input
-// //                 } else {
-// //                     setErrorMessage('Invalid input! Please enter a valid email address.');
-// //                 }
-// //             }} />
-        
-// //             <TextInput style={styles.input} placeholder='Password' secureTextEntry onChangeText={text => {
-// //                 if (/^[a-zA-Z0-9]+$/.test(text)) {
-// //                     // Valid input
-// //                 } else {
-// //                     setErrorMessage('Invalid input! Please enter only letters and numbers.');
-// //                 }
-// //             }} />
-        
-// //             <TextInput style={styles.input} placeholder='Confirm Password' secureTextEntry onChangeText={text => {
-// //                 if (/^[a-zA-Z0-9]+$/.test(text)) {
-// //                     // Valid input
-                    
-// //                 } else {
-// //                     setErrorMessage('Invalid input! Please enter only letters and numbers.');
-// //                 }
-// //             }} />
-
-// //             {/* <Text> Gender</Text> */}
-// //             <RadioGroup radioButtons={radioButtonsData} onPress={(radioButtonsData: React.SetStateAction<undefined>) => setSelectedId(radioButtonsData)} style={styles.radioB} />
-
-// //             <TextInput style={styles.input} placeholder='Phone Number' onChangeText={text => {
-// //                 if (/^[0-9]+$/.test(text)) {
-// //                     // Valid input
-// //                 } else {
-// //                     setErrorMessage('Invalid input! Please enter only numbers.');
-// //                 }
-// //             }} />
-// //             {/* <CheckBox 
-// //                     disabled={false}
-// //                     value={isSelected}
-// //                     onValueChange={setSelection}
-// //                     style={styles.checkbox}/> */}
-// //             <View style={styles.checkboxView}>
-// //                 {Platform.OS === 'android' && (
-// //                     <CheckBox
-// //                         value={isSelected}
-// //                         onValueChange={setSelection}
-// //                         style={styles.checkbox}
-// //                     />
-// //                 )}
-// //             </View>
-// //             <Text>Agree to terms and conditions</Text>
-// //             <TouchableOpacity style={styles.button}>
-// //                 <Text style={styles.buttonText} onPress={handleRegister}>Register</Text>
-// //             </TouchableOpacity>
-
-// //             {errorMessage && <Text style={styles.error}>{errorMessage}</Text>}
-        
-// //             <Text style={styles.link} onPress={() => navigation.navigate('Login')}>Already have an account?</Text>
-// //         </View>
-// //         </ScrollView>
-
-// //         </KeyboardAvoidingView>
-// //     )
-// // }
-
-// // export default RegisterUserScreen;
-
-// import React, { useState, useMemo } from 'react';
-// import { View, Text, TextInput, TouchableOpacity, Alert, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
-// import styles from '../../styles';
-// import RadioGroup, { RadioButtonProps } from 'react-native-radio-buttons-group';
-// import CheckBox from '@react-native-community/checkbox';
-// import { registerUser } from '../../../api';
-
-// type UserData = {
-//   first_name: string;
-//   last_name: string;
-//   email: string;
-//   password: string;
-//   confirm_password: string;
-//   gender?: string;
-//   phone_no?: string;
-// };
-
-// const RegisterUserScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
-//   const [userData, setUserData] = useState<UserData>({
-//     first_name: '',
-//     last_name: '',
-//     email: '',
-//     password: '',
-//   
-//       {
-//         i//     gender: '',
-//     phone_no: '',
-//   });
-
-//   const [isSelected, setSelection] = useState(false);
-//   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-//   const radioButtonsData: RadioButtonProps[] = useMemo(
-//     () => [
-//       {
-//         id: '1',
-//         label: 'Male',
-//         value: 'Male',
-//       },
-//       {
-//         id: '2',
-//         label: 'Female',
-//         value: 'Female',
-//       },
-//     ],
-//     []
-//   );
-//   const [selectedId, setSelectedId] = useState<string | undefined>();
-
-//   const handleInputChange = (name: keyof UserData, value: string) => {
-//     setUserData((prevState) => ({
-//       ...prevState,
-//       [name]: value,
-//     }));
-//   };
-
-//   const handleRegister = async () => {
-//     const { first_name, last_name, email, password, confirm_password, gender, phone_no } = userData;
-
-//     // Perform input validation and checks here
-
-//     try {
-//       const response = await registerUser(userData);
-//       Alert.alert('Success', response.message);
-//     } catch (error: any) {
-//       Alert.alert('Error', error.message);
-//     }
-//   };
-
-//   return (
-//     <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-//       <ScrollView>
-//         <View style={styles.container}>
-//           <Text style={styles.title}>NeoSTORE</Text>
-
-//           <TextInput
-//             style={styles.input}
-//             placeholder="First Name"
-//             onChangeText={(text) => {
-//               if (/^[a-zA-Z]+$/.test(text)) {
-//                 handleInputChange('first_name', text);
-//               } else {
-//                 setErrorMessage('Invalid input! Please enter only letters.');
-//               }
-//             }}
-//           />
-
-//           <TextInput
-//             style={styles.input}
-//             placeholder="Last Name"
-//             onChangeText={(text) => {
-//               if (/^[a-zA-Z]+$/.test(text)) {
-//                 handleInputChange('last_name', text);
-//               } else {
-//                 setErrorMessage('Invalid input! Please enter only letters.');
-//               }
-//             }}
-//           />
-
-//           <TextInput
-//             style={styles.input}
-//             placeholder="Email"
-//             onChangeText={(text) => {
-//               if (/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[A-Za-z]{2,}$/.test(text)) {
-//                 handleInputChange('email', text);
-//               } else {
-//                 setErrorMessage('Invalid input! Please enter a valid email address.');
-//               }
-//             }}
-//           />
-
-//           <TextInput
-//             style={styles.input}
-//             placeholder="Password"
-//             secureTextEntry
-//             onChangeText={(text) => {
-//               handleInputChange('password', text);
-//             }}
-//           />
-
-//           <TextInput
-//             style={styles.input}
-//             placeholder="Confirm Password"
-//             secureTextEntry
-//             onChangeText={(text) => {
-//               handleInputChange('confirm_password', text);
-//             }}
-//           />
-
-//           <RadioGroup
-//             radioButtons={radioButtonsData}
-//             onPress={(selectedId: string) => {
-//               const selectedButton = radioButtonsData.find((rb) => rb.id === selectedId);
-//               if (selectedButton) {
-//                 const { value } = selectedButton;
-//                 handleInputChange('gender', value || '');
-//                 setSelectedId(selectedButton.id);
-//               }
-//             }}
-//           />
-
-//           <TextInput
-//             style={styles.input}
-//             placeholder="Phone Number"
-//             onChangeText={(text) => {
-//               if (/^[0-9]+$/.test(text)) {
-//                 handleInputChange('phone_no', text);
-//               } else {
-//                 setErrorMessage('Invalid input! Please enter only numbers.');
-//               }
-//             }}
-//           />
-
-//           <View style={styles.checkboxView}>
-//             {Platform.OS === 'android' && (
-//               <CheckBox
-//                 value={isSelected}
-//                 onValueChange={setSelection}
-//                 style={styles.checkbox}
-//               />
-//             )}
-//           </View>
-//           <Text>Agree to terms and conditions</Text>
-//           <TouchableOpacity style={styles.button} onPress={handleRegister}>
-//             <Text style={styles.buttonText}>Register</Text>
-//           </TouchableOpacity>
-
-//           {errorMessage && <Text style={styles.error}>{errorMessage}</Text>}
-
-//           <Text style={styles.link} onPress={() => navigation.navigate('Login')}>
-//             Already have an account?
-//           </Text>
-//         </View>
-//       </ScrollView>
-//     </KeyboardAvoidingView>
-//   );
-// };
-
-// export default RegisterUserScreen;
 
 import React from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Alert, ActivityIndicator } from 'react-native';
@@ -354,6 +11,10 @@ import styles from '../../../styles';
 import SubmitButton from '../../CustomsComponents/submitButton';
 import { StackNavigationProp } from '@react-navigation/stack';
 import LogInScreen from './LoginScreen';
+import { registerUser,selectAuth } from '../../Redux/slices/authSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch } from '../../Redux/store';
+
 
 const validationSchema = Yup.object().shape({
   first_name: Yup.string()
@@ -410,6 +71,10 @@ type RegisterScreenProps = {
 };
 
 const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
+  
+  
+  const dispatch = useDispatch<AppDispatch>();
+  // const { loading } = useSelector(selectAuth);
   const initialValues: FormValues = {
     first_name: '',
     last_name: '',
@@ -421,42 +86,6 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
     termsAccepted: false,
   };
 
-  const registerUser = async (userData: Omit<FormValues, 'termsAccepted'>) => {
-    console.log('Attempting to register');
-    try {
-      const formData = new FormData();
-      formData.append('first_name', userData.first_name);
-      formData.append('last_name', userData.last_name);
-      formData.append('email', userData.email);
-      formData.append('password', userData.password);
-      formData.append('confirm_password', userData.confirm_password);
-      formData.append('gender', userData.gender);
-      formData.append('phone_no', userData.phone_no);
-// console.log("formData---",formData);
-
-      const response = await axios.post('http://staging.php-dev.in:8844/trainingapp/api/users/register', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      });
-      console.log(response.data);
-      return response.data;
-      
-    } catch (error: any) {
-      if (error.response) {
-        console.error('Error response data:', error.response.data);
-        console.error('Error response status:', error.response.status);
-        Alert.alert('Error', error.response.data.message || 'An error occurred');
-      } else if (error.request) {
-        console.error('Error request:', error.request);
-        Alert.alert('Error', 'No response received from server');
-      } else {
-        console.error('Error message:', error.message);
-        Alert.alert('Error', error.message);
-      }
-      throw error;
-    }
-  };
 
   
   return (
@@ -471,29 +100,38 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
           initialValues={initialValues}
           validationSchema={validationSchema}
           onSubmit={async (values) => {
+           
             try {
-              const { termsAccepted, ...userData } = values;
-              console.log(userData);
-              const response = await registerUser(userData);
-              Alert.alert('Success', response.message);
-                setTimeout(() => {
-                navigation.navigate('Login');
-                }, 1000);
-                return (
-                <ActivityIndicator size="large" color="purple" />
-                );
-            } catch (error) {
-              console.log(error);
-              Alert.alert('Error', 'Failed to register user');
-              let errorMessage = 'An unknown error occurred while submitting the form';
-              if (error instanceof Error) {
-                errorMessage = error.message;
+              const formData = new FormData();
+              formData.append('first_name', values.first_name);
+              formData.append('last_name', values.last_name);
+              formData.append('email', values.email);
+              formData.append('password', values.password);
+              formData.append('confirm_password', values.confirm_password);
+              formData.append('gender', values.gender);
+              formData.append('phone_no', values.phone_no);
+
+              await dispatch(registerUser(formData)).unwrap();
+              Alert.alert('Success', 'Registration successful');
+              navigation.navigate('Login'); // Navigate to login screen on successful registration
+            } catch (error: any) {
+              if (error.response) {
+                console.error('Error response data:', error.response.data);
+                console.error('Error response status:', error.response.status);
+                Alert.alert('Error', error.response.data.message || 'An error occurred');
+              } else if (error.request) {
+                console.error('Error request:', error.request);
+                Alert.alert('Error', 'No response received from server');
+              } else {
+                console.error('Error message:', error.message);
+                Alert.alert('Error', error.message);
               }
-              Alert.alert('Error', errorMessage);
+              throw error;
             }
           }}
-        //  onSubmit={values => console.log('😘😘😘😘😘😘😘',values)}
-        >
+
+           >
+
           {({ handleChange, handleBlur, handleSubmit, setFieldValue, values, errors, touched }) => (
             <View>
 
@@ -595,5 +233,6 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
     </View>
   );
 };
+
 
 export default RegisterScreen;

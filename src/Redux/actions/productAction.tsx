@@ -1,7 +1,7 @@
 import axios from "axios";
 
 import { UseDispatch } from "react-redux";
-import { fetchProductsRequest, fetchProductsSuccess, fetchProductsFailure } from "../reducers/productReducer";
+import { fetchProductsRequest, fetchProductsSuccess, fetchProductsFailure } from "../slices/productSlice";
 import { Dispatch } from "@reduxjs/toolkit";
 
 export const fetchProducts =()=> async(dispatch:Dispatch)=>{

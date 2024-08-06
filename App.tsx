@@ -1,22 +1,19 @@
-import React from 'react';
-import { View, Text } from 'react-native';
-import MainNavigation from './src/Screens/MainNavigation';
-import styles from './styles';
-import { AuthProvider } from './src/Screens/LogNav/AuthProvider';
+import { Provider } from 'react-redux';
+import store from './src/Redux/store';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import MainNavigation from './src/Screens/MainNavigation';
 
 const App: React.FC = () => {
-  return (
+  console.log('Rendering App with Provider');
 
-    <AuthProvider>
+
+  return (
+    <Provider store={store}>
       <SafeAreaProvider>
         <MainNavigation />
       </SafeAreaProvider>
-
-    </AuthProvider>
+    </Provider>
   );
 };
 
 export default App;
-
-

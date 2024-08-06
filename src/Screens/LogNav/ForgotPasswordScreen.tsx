@@ -1,17 +1,16 @@
-import { View, Text, TextInput, TouchableHighlight, Alert } from 'react-native'
+import { View, Text, TextInput, TouchableHighlight, Alert, ActivityIndicator } from 'react-native'
 import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react'
 import styles from '../../../styles'
 import LinearGradient from 'react-native-linear-gradient';
 import SubmitButton from '../../CustomsComponents/submitButton';
-import { forgotPassword } from '../../../api';
-
-
-
+import LogInScreen from './LoginScreen';
+import { useDispatch } from 'react-redux';
+import { forgotPassword } from '../../Redux/slices/authSlice';
 
 
 const ForgotPasswordScreen = () => {
-  
+  const dispatch = useDispatch();
   const navigation = useNavigation();
 
 
@@ -22,14 +21,16 @@ const ForgotPasswordScreen = () => {
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
-  const handleEmailSubmit = async () => {
+  const handleEmailSubmit =  () => {
    
     try {
-        await forgotPassword(email);
+
+        dispatch( forgotPassword(email)).unwrap(); 
+          Alert.alert('Success', 'New password is in your mail.');
+         forgotPassword(email);
         console.log('Forgot password email sent.');
-        
         setTimeout(() => {
-          navigation.navigate('Login');
+        navigation.navigate('LoginScreen');
         }, 2000);
       } catch (error) {
         console.error('Error:', error);
@@ -37,6 +38,15 @@ const ForgotPasswordScreen = () => {
         // Handle error (e.g., show an error message)
       }
 };
+
+// const handleEmailSubmit = () => {
+//   if (!email) {
+//     alert('Please enter your email');
+//     return        <ActivityIndicator size="large" color="purple" />
+;
+//   }
+//   dispatch(forgotPassword(email));
+// };
 
 
   const handleOtpSubmit = () => {
