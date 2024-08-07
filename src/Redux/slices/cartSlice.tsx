@@ -17,7 +17,7 @@ const initialState: CartState = {
 export const addToCart = createAsyncThunk(
   "cart/addToCart",
   async (
-    { productId, quantity }: { productId: string; quantity: number },
+    { productId, quantity }: { productId: number; quantity: number },
     { rejectWithValue, getState }
   ) => {
     const state: any = getState();
@@ -30,7 +30,7 @@ export const addToCart = createAsyncThunk(
         "addToCart",
         {
           product_id: productId,
-          quantity,
+          quantity: quantity,
         },
         {
           headers: {

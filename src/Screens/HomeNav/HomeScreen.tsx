@@ -1,22 +1,24 @@
 import React, { Component, useState } from 'react'
 import styles from '../../../styles';
-import { Text,View,ScrollView, Image } from 'react-native';
+import { Text,View,ScrollView, Image,Animated } from 'react-native';
 import CustomButton from '../../CustomsComponents/customButton';
 import Header from '../../CustomsComponents/Header';
-// import DrawerList from '../DrawerNav/DrawerList';
 import { useNavigation } from '@react-navigation/native'; // Import the useNavigation hook
-import DrawerList from '../DrawerNav/DrawerList';
+// import DrawerList from '../DrawerNav/DrawerList';
 import CustomDrawer from '../HomeNav/ScreenComponents/CustomDrawer';
 // import  {ScrollView} from 'react-native-gesture-handler';
+import { UseSelector } from 'react-redux';
+import cartSlice from '../../Redux/slices/cartSlice';
 
-// Add the correct path to the 'ProductList' module
-import ProductList from './ScreenComponents/ProducCategory';
-// import { Navigation } from 'react-native-navigation'; // Import the Navigation module
+
+import ProductHList from './ScreenComponents/HorizontalList';
+import ProductVList from './ScreenComponents/VerticalList';
 
 const HomeScreen: React.FC<{ComponentId:string}> = () => {
   const navigation = useNavigation();
   const [isDrawerVisible, setDrawerVisible] = useState(false);
-
+  const av = new Animated.Value(0);
+  av.addListener(() => {return});
   const handleButtonPress = () => {
     console.log('Button Pressed');
   };
@@ -41,7 +43,7 @@ const HomeScreen: React.FC<{ComponentId:string}> = () => {
       />
       <CustomDrawer isVisible={isDrawerVisible} onClose={() => setDrawerVisible(false)} />
 
-    <ScrollView >
+    <ScrollView  >
       
       <View style={styles.contentContainer}>
         <Text style={styles.heading}>Feel All</Text>
@@ -64,10 +66,11 @@ const HomeScreen: React.FC<{ComponentId:string}> = () => {
           textColor="white"
         />
       </View>
-      <ProductList />
-      <ProductList />
+      <ProductHList />
+      <ProductVList/> 
 
-    </ScrollView>
+      </ScrollView>
+
   </View>
   );
 };

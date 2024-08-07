@@ -10,6 +10,14 @@ import axiosInstance from "../../Screens/mislenous/axiosInstance";
     error:string|null;
 }
 
+interface Product{
+    id: number;
+    name: string;
+    cost: number;
+    product_images: string;
+    rating: number;
+}
+
 const initialState : ProductState ={
     products: [],
     productDetails: null,
@@ -30,11 +38,15 @@ export const fetchProducts = createAsyncThunk(
                 },
             });
             return response.data.data;
+            console.log(response.data);
+            console.log(response.data.data);
         }catch(error:any){
             return rejectWithValue(error.response?.data?.message || 'Failed to fetch products');
         }
     }
 );
+
+
 export const fetchProductDetails = createAsyncThunk(
     'products/fetchProductDetails',
     async (productId:string, {rejectWithValue}) =>{
@@ -46,6 +58,8 @@ export const fetchProductDetails = createAsyncThunk(
         }
     }
 );
+
+
 
 const productSlice = createSlice({
     name:'products',

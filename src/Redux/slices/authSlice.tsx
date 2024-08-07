@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk,PayloadAction } from "@reduxjs/toolkit";
 import {RootState} from '../store';
 import axiosInstance from "../../Screens/mislenous/axiosInstance";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import {  } from "../../Screens/mislenous/url";
 interface AuthState{
     user : any|null;
     isAuthenticated:boolean;
@@ -26,6 +26,7 @@ export const initializeAuth = createAsyncThunk(
       const token = await AsyncStorage.getItem('access_token');
       if (token) {
         dispatch(authSlice.actions.setAuth({ accessToken: token, isAuthenticated: true }));
+        console.log('Saved Token', token);
       }
     }
   );
@@ -50,23 +51,26 @@ export const loginUser = createAsyncThunk(
             const formdatas = new FormData();
             formdatas.append('email',formData.email);
             formdatas.append('password',formData.password);
-            console.log('formData 123' , formData);
             console.log(formdatas,"formdatas");
             const response = await axiosInstance.post('/users/login',formdatas);
 
-            console.log('Response',response.data);
-            console.log('Response Data',response.data.access_token);
-            const data = response.data.data;
+           console.log('Response',response.data);
+            ;
+            const accessToken = response.data.access_token;
+            console.log('Data',data);
             // Store the access token in local storage
             await AsyncStorage.setItem('access_token', response.data.access_token);
+            console.log('Response Data', response.data.access_token);
+
             navigation.navigate('HomeNavsScreen');
             
             
         } catch(error:any){
-            console.log("Error in llogin", error)
+            console.log("Error in login", error)
             if (error.isAxiosError && !error.response) {
                 return rejectWithValue('Network Error');
             }
+            navigation.navigate('ErrorScreen');
             return rejectWithValue(error.response?.data?.message|| 'Failed to Login' );
         }
     });

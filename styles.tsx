@@ -9,6 +9,13 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(255, 171, 0, 0.64)', 
 
     },
+    Vcontainer:{
+        flex: 1,
+        alignContent: 'center',
+        justifyContent: 'center',
+        alignItems: 'center',
+        
+    },
     headerContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -54,10 +61,12 @@ const styles = StyleSheet.create({
         backgroundColor: 'tomato',
     },
     title: {
-        fontSize: 30,
+        fontSize: 24,
         fontWeight: 'bold',
-        color: 'black'
-    },
+        // marginBottom: 16,
+        margin:-5,
+        fontFamily: 'Poppins',
+      },
     buttonText: {
         fontSize: 18,
         color: 'white',
@@ -232,8 +241,22 @@ const styles = StyleSheet.create({
             textDecorationLine: 'underline',
             textAlign: 'center',
     },
+    productVlist: {
+        paddingBottom: 16,
+    },
+    horizontalList: {
+        padding: 16,
+    },
+    verticalList: {
+        padding: 16,
+    },
+    flatListContainer: {
+        padding: 16,
+    },
+    
+    }
 
-});
+);
 
 
 export default styles;
