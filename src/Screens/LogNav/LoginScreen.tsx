@@ -1,15 +1,15 @@
 import { View, Text, TextInput, Alert } from 'react-native';
-import React, { useState } from 'react';
-import SubmitButton from '../../CustomsComponents/submitButton';
+import React, { useState, useEffect } from 'react';
 import { LogInScreenNavigationProp } from '../mislenous/RootstackParam';
 import LinearGradient from 'react-native-linear-gradient';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { loginUser } from '../../Redux/slices/authSlice';
-import HomeMainNav from '../HomeNav/HomeMainNav';
 import { ActivityIndicator } from 'react-native-paper';
 import styles from '../../../styles';
 import CustomButton from '../../CustomsComponents/customButton';
-import { HttpStatusCode } from 'axios';
+import Toast  from 'react-native-toast-message'; // Adjust this import according to your project structure
+
+
 // types.ts
 export interface LoginUser {
   email: string;
@@ -37,41 +37,61 @@ const LogInScreen = ({ navigation }: LogInScreenNavigationProp) => {
     email: '',
     password: '',
   });
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const dispatch = useDispatch();
-  const handleLogin = async () => {
+  const { loading } = useSelector((state: RootState) => state.auth);
 
-    try {
-      console.log('Form Data: ', formData); // Log form data before sending
-      dispatch(loginUser({formData,navigation}));
+  useEffect(() => {
+      const isFormValid = formData.email && formData.password; // Check if both email and password are filled
+      const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email); // Check if email is valid
+      setIsButtonDisabled(!isFormValid || !isEmailValid);
+    }, [formData]);
 
-      
-      // setTimeout(() => {
-      //   <ActivityIndicator animating={true} color="red" />
-      //   Alert.alert('Success', 'Login Successful');
-      // }, 1000);
-      
-    } catch (error: any) {
-      console.error('Error Response: ', error.response ? error.response.data : error.message);
-      Alert.alert('Error', error.response?.data?.message || 'Something went wrong');
-    }
 
-  };
+    const handleLogin = async () => {
+      if (!formData.email || !formData.password) {
+        Alert.alert('Validation Error', 'Please fill in both email and password.');
+        return;
+      }
+    
+      try {
+        const resultAction = await dispatch(loginUser({ formData }) as any);
+    
+        if (loginUser.fulfilled.match(resultAction)) {
+          navigation.navigate('HomeNavsScreen');
+          Toast.show({
+            type: 'success',
+            text1: 'Login Successful',
+            text2: 'Welcome back!',
+            position: 'bottom',
+          });
+        } else {
+          const errorMessage = resultAction.payload || 'Failed to login';
+          Toast.show({
+            type: 'error',
+            text1: 'Login Error',
+            text2: errorMessage,
+            position: 'top',
+          });
+        }
+    
+      } catch (error: any) {
+        const errorMessage = error.response?.data?.message || 'Something went wrong';
+        Alert.alert('Error', errorMessage);
+      }
+    };
+    
   return (
     <View style={styles.container}>
-      {/* <LinearGradient
-        colors={['purple', 'teal']}
-        start={{ x: 1, y: 0 }}
-        end={{ x: 1, y: 1 }}
-        style={styles.gradient}
-      > */}
       <Text style={styles.title}>NeoSTORE</Text>
       <TextInput
         placeholder="email"
         style={styles.input}
         value={formData.email}
         onChangeText={text => setFormData({ ...formData, email: text })}
-        autoCapitalize='none'
+        autoCapitalize="none"
       />
+
       <TextInput
         placeholder="password"
         style={styles.input}
@@ -79,16 +99,10 @@ const LogInScreen = ({ navigation }: LogInScreenNavigationProp) => {
         onChangeText={text => setFormData({ ...formData, password: text })}
         secureTextEntry
       />
-      {/* <SubmitButton
-          title="Login"
-          onPress={handleLogin}
-          
-        /> */}
-      <CustomButton
-        text="Login"
-        onPress={handleLogin} />
-
-      <View>
+      <CustomButton text="Login" onPress={handleLogin} disabled={isButtonDisabled || loading} />
+       
+      {loading && <ActivityIndicator animating={true} color="red" />}  
+      <View style={styles.linktext}>
         <Text style={styles.link} onPress={() => navigation.navigate('ForgotPasswordScreen')}>
           Forgot Password?
         </Text>
@@ -96,7 +110,6 @@ const LogInScreen = ({ navigation }: LogInScreenNavigationProp) => {
           Don't have an account?
         </Text>
       </View>
-      {/* </LinearGradient> */}
     </View>
   );
 };

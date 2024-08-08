@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
         fontSize: 24,
         fontWeight: 'bold',
         // marginBottom: 16,
-        margin:-5,
+        margin: 10,
         fontFamily: 'Poppins',
       },
     buttonText: {
@@ -123,6 +123,10 @@ const styles = StyleSheet.create({
     link: {
         margin: 2,
         color: 'red',
+        
+    },
+    linktext:{
+        alignItems:'center',
     },
     checkboxView: {
         marginTop: 10,

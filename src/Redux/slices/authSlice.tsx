@@ -2,7 +2,10 @@ import { createSlice, createAsyncThunk,PayloadAction } from "@reduxjs/toolkit";
 import {RootState} from '../store';
 import axiosInstance from "../../Screens/mislenous/axiosInstance";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+ //import useToast  from 'react-native-toast-message';
+
 import {  } from "../../Screens/mislenous/url";
+import { Alert } from "react-native";
 interface AuthState{
     user : any|null;
     isAuthenticated:boolean;
@@ -12,10 +15,11 @@ interface AuthState{
 }
 
 const initialState:AuthState = {
-    user:null,
-    isAuthenticated:false,
-    loading:false,
-    error:null,
+    user: null,
+    isAuthenticated: false,
+    loading: false,
+    error: null,
+    access_token: null
 };
 
 
@@ -23,10 +27,10 @@ const initialState:AuthState = {
 export const initializeAuth = createAsyncThunk(
     'auth/initializeAuth',
     async (_, { dispatch }) => {
-      const token = await AsyncStorage.getItem('access_token');
-      if (token) {
-        dispatch(authSlice.actions.setAuth({ accessToken: token, isAuthenticated: true }));
-        console.log('Saved Token', token);
+      const accessToken = await AsyncStorage.getItem('access_token');
+      if (accessToken) {
+        dispatch(authSlice.actions.setAuth({ accessToken: accessToken, isAuthenticated: true }));
+        console.log('SavedToken', accessToken);
       }
     }
   );
@@ -45,37 +49,52 @@ export const registerUser = createAsyncThunk(
 
 
 export const loginUser = createAsyncThunk(
-    'auth/loginUser',
-    async ({formData,navigation}:{formData: any, navigation: any},{rejectWithValue})=>{
-        try{
-            const formdatas = new FormData();
-            formdatas.append('email',formData.email);
-            formdatas.append('password',formData.password);
-            console.log(formdatas,"formdatas");
-            const response = await axiosInstance.post('/users/login',formdatas);
+  'auth/loginUser',
+  async ({ formData }: { formData: any }, { rejectWithValue }) => {
+    try {
+      if (!formData?.email || !formData?.password) throw new Error('Invalid form data');
 
-           console.log('Response',response.data);
-            ;
-            const accessToken = response.data.access_token;
-            console.log('Data',data);
-            // Store the access token in local storage
-            await AsyncStorage.setItem('access_token', response.data.access_token);
-            console.log('Response Data', response.data.access_token);
+      const formdatas = new FormData();
+      formdatas.append('email', formData.email);
+      formdatas.append('password', formData.password);
 
-            navigation.navigate('HomeNavsScreen');
-            
-            
-        } catch(error:any){
-            console.log("Error in login", error)
-            if (error.isAxiosError && !error.response) {
-                return rejectWithValue('Network Error');
-            }
-            navigation.navigate('ErrorScreen');
-            return rejectWithValue(error.response?.data?.message|| 'Failed to Login' );
+      const response = await axiosInstance.post('/users/login', formdatas);
+      const { access_token: accessToken, ...restData } = response.data;
+
+      console.log('Full Response Data:', JSON.stringify(response.data));
+
+      if (accessToken) {
+        await AsyncStorage.setItem('access_token', accessToken);
+      } else {
+        await AsyncStorage.removeItem('access_token');
+      }
+
+      return restData;
+
+    } catch (error: any) {
+      let errorMessage = 'Failed to Login';
+
+      if (error.isAxiosError && !error.response) {
+        errorMessage = 'Network Error. Please check your internet connection and try again.';
+      } else if (error.response?.status === 500) {
+        errorMessage = 'Server Error. Please try again later.';
+      } else if (error.response?.status === 400) {
+        if (error.response?.data?.message.includes('email')) {
+          errorMessage = 'User email does not exist. Please try again.';
+        } else if (error.response?.data?.message.includes('password')) {
+          errorMessage = 'Incorrect password. Please try again.';
+        } else {
+          errorMessage = 'Invalid email or password. Please try again.';
         }
-    });
+      } else {
+        errorMessage = error.response?.data?.message || errorMessage;
+      }
 
-
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
+         
 
 
 
@@ -177,3 +196,4 @@ const authSlice = createSlice({
 export const {logoutUser} = authSlice.actions;
 export const selectAuth = (state:RootState)=>state.auth;
 export default authSlice.reducer;
+

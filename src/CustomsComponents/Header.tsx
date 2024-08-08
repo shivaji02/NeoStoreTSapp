@@ -1,6 +1,8 @@
 import React from 'react';
 import { View, Text, StyleSheet,Image, TouchableOpacity } from 'react-native';
 // import Icon from 'react-native-vector-icons/Ionicons';
+import { useSelector } from 'react-redux';
+import { selectCartItemCount } from '../Redux/slices/cartSlice';  // Import cart selector
 
 interface HeaderProps {
   title?: string;
@@ -9,14 +11,17 @@ interface HeaderProps {
   onCartPress: () => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ title = 'NeoStore', cartItemCount = 0, onDrawerPress, onCartPress }) => {
+const Header: React.FC<HeaderProps> = ({ title = 'NeoStore', onDrawerPress, onCartPress }) => {
+  const cartItemCount = useSelector(selectCartItemCount);  // Get cart item count from Redux
+
+
   return (
-    <View style={styles.headerContainer}>
+     <View style={styles.headerContainer}>
       <View style={styles.Drawicon}>
-      <TouchableOpacity onPress={onDrawerPress}>
-        <Image source={require('../Assets.xcassets/Images/menuIcon.png')} style={styles.Menuicon} />
-      </TouchableOpacity>
-      <Text style={styles.title}>{title}</Text>
+        <TouchableOpacity onPress={onDrawerPress}>
+          <Image source={require('../Assets.xcassets/Images/menuIcon.png')} style={styles.Menuicon} />
+        </TouchableOpacity>
+        <Text style={styles.title}>{title}</Text>
       </View>
       <TouchableOpacity style={styles.cartIcon} onPress={onCartPress}>
         <Image source={require('../Assets.xcassets/Images/cartIcon.png')} style={styles.Carticon} />

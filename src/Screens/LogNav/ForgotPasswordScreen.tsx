@@ -22,10 +22,10 @@ const ForgotPasswordScreen = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
 
   const handleEmailSubmit =  () => {
-   
+  
     try {
 
-        dispatch( forgotPassword(email)).unwrap(); 
+        dispatch( forgotPassword(email)); 
           Alert.alert('Success', 'New password is in your mail.');
          forgotPassword(email);
         console.log('Forgot password email sent.');
@@ -117,7 +117,7 @@ const handlePasswordSubmit = () => {
                   />
                   <TouchableHighlight style={styles.button}>
                       <Text style={styles.buttontext} onPress={handlePasswordSubmit}>
-                          Submit
+                          Submit 
                       </Text>
                   </TouchableHighlight>
               </View>

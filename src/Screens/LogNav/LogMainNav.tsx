@@ -4,6 +4,7 @@ import LoginScreen from './LoginScreen'
 import RegisterUserScreen from './RegisterUserScreen'
 import ForgotPasswordScreen from './ForgotPasswordScreen'
 import { LogInScreenNavigationProp } from '../mislenous/RootstackParam'
+import ErrorScreen from '../mislenous/Error'
 import HomeNavsScreen from '../HomeNav/HomeMainNav'
 
 const Stack=createStackNavigator();
@@ -14,6 +15,7 @@ const LogMainNav=()=>{
     <Stack.Screen options={{headerShown:false}} name='HomeNavsScreen' component={HomeNavsScreen} />
     <Stack.Screen options={{headerShown:false}} name='RegisterUserScreen' component={RegisterUserScreen} />
     <Stack.Screen options={{headerShown:false}} name ='ForgotPasswordScreen' component={ForgotPasswordScreen} />
+    <Stack.Screen options={{headerShown:false}} name='ErrorScreen' component={ErrorScreen} />
 </Stack.Navigator>
     )
 }

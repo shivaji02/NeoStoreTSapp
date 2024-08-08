@@ -1,11 +1,13 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useRef } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Animated, Dimensions, Image } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 const { width } = Dimensions.get('window');
 
 const CustomDrawer: React.FC<{ isVisible: boolean; onClose: () => void }> = ({ isVisible, onClose }) => {
   const animation = useRef(new Animated.Value(-width)).current;
+  const navigation = useNavigation();
 
   // Animate the drawer in or out based on isVisible prop
   React.useEffect(() => {
@@ -14,31 +16,34 @@ const CustomDrawer: React.FC<{ isVisible: boolean; onClose: () => void }> = ({ i
       duration: 300,
       useNativeDriver: true,
     }).start();
-    const token = AsyncStorage.getItem('token');
-    console.log(token);
   }, [isVisible]);
-  
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     console.log('Logout------');
-
-
-  } 
+    await AsyncStorage.removeItem('accessToken');
+    navigation.navigate('LoginScreen');
+  };
 
   return (
     <Animated.View style={[styles.drawerContainer, { transform: [{ translateX: animation }] }]}>
-     
-      <TouchableOpacity onPress={onClose}>
+      <TouchableOpacity onPress={onClose} style={styles.closeButton}>
         <Image source={require('../../../Assets.xcassets/Images/closeIcon.png')} style={styles.closeIcon} />
       </TouchableOpacity>
 
       <View style={styles.drawerContent}>
-        <Text style={styles.drawerItem}>My Account</Text>
-        <Text style={styles.drawerItem}>Cart</Text>
-        <Text style={styles.drawerItem}>Notifications</Text>
+        <TouchableOpacity onPress={() => navigation.navigate('MyAccount')}>
+          <Text style={styles.drawerItem}>My Account</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('Cart')}>
+          <Text style={styles.drawerItem}>Cart</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('Notifications')}>
+          <Text style={styles.drawerItem}>Notifications</Text>
+        </TouchableOpacity>
       </View>
-      <View>
-        <TouchableOpacity onPress={onClose}>
+
+      <View style={styles.logoutContainer}>
+        <TouchableOpacity onPress={handleLogout}>
           <Text style={styles.logout}>Logout</Text>
         </TouchableOpacity>
       </View>
@@ -47,44 +52,48 @@ const CustomDrawer: React.FC<{ isVisible: boolean; onClose: () => void }> = ({ i
 };
 
 const styles = StyleSheet.create({
-    drawerContainer: {
-        position: 'absolute',
-        left: 0,
-        top: 0,
-        bottom: 0,
-        width: width * 0.8, // 80% width of the screen
-        backgroundColor: '#fff',
-        elevation: 5,
-        shadowColor: '#000',
-        shadowOpacity: 0.5,
-        shadowRadius: 5,
-        shadowOffset: { width: 2, height: 0 },
-        zIndex: 4,
-    },
-    
-    drawerContent: {
-        padding: 20,
-    },
-    drawerItem: {
-        marginVertical: 10,
-        fontSize: 16,
-    },
-    logout:{
-        position: 'absolute',
-        bottom : -500,
-        left: 120,
-    },
-    closeIcon: {
-        width: 50,
-        height: 28,
-        padding: 16,
-        fontSize: 18,
-        backgroundColor: '#f2f2f2',
-        alignContent:'flex-end',
-        position: 'absolute',
-        top: 16,
-        right: 16,
-    },
+  drawerContainer: {
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    bottom: 0,
+    width: width * 0.8, // 80% width of the screen
+    backgroundColor: '#fff',
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOpacity: 0.5,
+    shadowRadius: 5,
+    shadowOffset: { width: 2, height: 0 },
+    zIndex: 4,
+    paddingTop: 40, // Adjust padding for top content
+  },
+  closeButton: {
+    position: 'absolute',
+    top: 16,
+    right: 16,
+  },
+  closeIcon: {
+    width: 28,
+    height: 28,
+  },
+  drawerContent: {
+    padding: 20,
+    paddingTop: 60, // Adjust padding to avoid overlap with close button
+  },
+  drawerItem: {
+    marginVertical: 10,
+    fontSize: 16,
+  },
+  logoutContainer: {
+    position: 'absolute',
+    bottom: 20,
+    width: '100%',
+    alignItems: 'center',
+  },
+  logout: {
+    fontSize: 16,
+    color: 'red',
+  },
 });
 
 export default CustomDrawer;
