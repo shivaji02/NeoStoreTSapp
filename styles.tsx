@@ -9,6 +9,12 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(255, 171, 0, 0.64)', 
 
     },
+    logincontainer:{
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        alignContent: 'center',
+    },
     Vcontainer:{
         flex: 1,
         alignContent: 'center',
@@ -67,6 +73,11 @@ const styles = StyleSheet.create({
         margin: 10,
         fontFamily: 'Poppins',
       },
+    loginImg: {
+        width: '90%',
+        height: 200,
+        marginTop:-90,
+    },
     buttonText: {
         fontSize: 18,
         color: 'white',
@@ -101,11 +112,11 @@ const styles = StyleSheet.create({
         color: 'white'
     },
     input: {
-        backgroundColor: 'gray',
-        padding: 10,
+        // backgroundColor: 'gray',
+        padding: 12,
         margin: 8,
-        borderRadius: 10,
-        width: 270
+        // borderRadius: 10,
+        width: 300
     },
     inputContainer: {
         padding: 10,

@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity, ImageSourcePropType } from 'react-native';
 
-interface ProductListView {
+interface ProductListViewProps {
   height: number;
   image: ImageSourcePropType;
   bigText: string;
@@ -9,7 +9,7 @@ interface ProductListView {
   onPress: () => void;
 }
 
-const ProductListView: React.FC<ProductListView> = ({ height, image, bigText, underlinedText, onPress }) => {
+const ProductListView: React.FC<ProductListViewProps> = ({ height, image, bigText, underlinedText, onPress }) => {
   return (
     <TouchableOpacity style={[styles.container, { height }]} onPress={onPress}>
       <Image source={image} style={styles.image} resizeMode="contain" />

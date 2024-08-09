@@ -1,52 +1,47 @@
-
 import React from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert, ActivityIndicator } from 'react-native';
+import { View, Text, TextInput, StyleSheet, Alert, ScrollView, Image, TouchableOpacity } from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { RadioButton } from 'react-native-paper'; // Install @react-native-paper if not already
-import CheckBox from '@react-native-community/checkbox'; // Install @react-native-community/checkbox if not already
-import axios from 'axios';
-import LinearGradient from 'react-native-linear-gradient';
-import styles from '../../../styles';
-import SubmitButton from '../../CustomsComponents/submitButton';
+import CheckBox from '@react-native-community/checkbox';
+import { RadioButton } from 'react-native-paper';
+import { useDispatch } from 'react-redux';
 import { StackNavigationProp } from '@react-navigation/stack';
-import LogInScreen from './LoginScreen';
-import { registerUser,selectAuth } from '../../Redux/slices/authSlice';
-import { useDispatch, useSelector } from 'react-redux';
+import { registerUser } from '../../Redux/slices/authSlice';
+import SubmitButton from '../../CustomsComponents/submitButton';
 import { AppDispatch } from '../../Redux/store';
-
+import Toast from 'react-native-toast-message';
 
 const validationSchema = Yup.object().shape({
   first_name: Yup.string()
     .matches(/^[a-zA-Z]+$/, "Only characters are allowed")
     .min(3, "Minimum 3 characters required")
-   .required("First name is required"),
+    .required("First name is required"),
   last_name: Yup.string()
     .matches(/^[a-zA-Z]+$/, "Only characters are allowed")
     .min(3, "Minimum 3 characters required")
-   .required("Last name is required"),
+    .required("Last name is required"),
   email: Yup.string()
-     .email("Invalid email")
-     .required("Email is required"),
+    .email("Invalid email")
+    .required("Email is required"),
   password: Yup.string()
     .min(6, "Password must be at least 6 characters")
     .matches(/[a-zA-Z]/, "Password must contain at least one letter")
     .matches(/\d/, "Password must contain at least one number")
     .matches(/[!@#$%^&*(),.?":{}|<>]/, "Password must contain at least one special character")
-   .required("Password is required"),
+    .required("Password is required"),
   confirm_password: Yup.string()
-   .oneOf([Yup.ref('password')], 'Passwords do not match')
-   .required("Confirm Password is required "),
+    .oneOf([Yup.ref('password')], 'Passwords do not match')
+    .required("Confirm Password is required"),
   gender: Yup.string()
-   .required("Gender is required"),
-  phone_no: Yup.string() 
+    .required("Gender is required"),
+  phone_no: Yup.string()
     .matches(/^[0-9]+$/, "Only numbers are allowed")
     .min(10, "Phone number must be at least 10 digits")
     .max(10, "Phone number must be at most 10 digits")
     .required("Phone number is required"),
   termsAccepted: Yup.bool()
     .oneOf([true], "You must accept the terms and conditions")
-   .required("You must accept the terms and conditions"),
+    .required("You must accept the terms and conditions"),
 });
 
 interface FormValues {
@@ -71,10 +66,8 @@ type RegisterScreenProps = {
 };
 
 const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
-  
-  
   const dispatch = useDispatch<AppDispatch>();
-  // const { loading } = useSelector(selectAuth);
+  
   const initialValues: FormValues = {
     first_name: '',
     last_name: '',
@@ -85,22 +78,39 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
     phone_no: '',
     termsAccepted: false,
   };
+  const handleToast = (type: 'success' | 'error', text: string) => {
+    Toast.show({
+      type: type,
+      text1: text,
+      visibilityTime: 4000,
+      autoHide: true,
+      position: 'top',
+    });
+  };
 
 
-  
+
   return (
-    <View style={styles.container}>
-      <LinearGradient
-        colors={['purple', 'teal']} //add colors more in array and see effect
-        start={{ x: 0, y: 1 }}
-        end={{ x: 1, y: 0 }}
-        style={styles.gradient}
-      >
+    <ScrollView contentContainerStyle={styles.container}>
+      <View style={styles.formContainer}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+          <Image
+            source={require('../../Assets.xcassets/Images/backIcon.png')}
+            style={styles.backIcon}
+          />
+        </TouchableOpacity>
+
+        <Image
+          source={require('../../Assets.xcassets/Images/loginimage.png')}
+          style={styles.registerImage}
+        />
+
+        <Text style={styles.title}>NeoStore SignUp</Text>
+
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}
           onSubmit={async (values) => {
-           
             try {
               const formData = new FormData();
               formData.append('first_name', values.first_name);
@@ -112,13 +122,12 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
               formData.append('phone_no', values.phone_no);
 
               await dispatch(registerUser(formData)).unwrap();
-              Alert.alert('Success', 'Registration successful');
-              navigation.navigate('Login'); // Navigate to login screen on successful registration
+              handleToast('success', 'Registration successful');
+              navigation.goBack(); // Navigate back on successful registration
             } catch (error: any) {
               if (error.response) {
-                console.error('Error response data:', error.response.data);
                 console.error('Error response status:', error.response.status);
-                Alert.alert('Error', error.response.data.message || 'An error occurred');
+                handleToast('error', error); // Show toast with the error message
               } else if (error.request) {
                 console.error('Error request:', error.request);
                 Alert.alert('Error', 'No response received from server');
@@ -129,14 +138,9 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
               throw error;
             }
           }}
-
-           >
-
+        >
           {({ handleChange, handleBlur, handleSubmit, setFieldValue, values, errors, touched }) => (
             <View>
-
-            <Text style={styles.title}>NeoUser</Text>
-           
               <TextInput
                 style={styles.input}
                 placeholder='First Name'
@@ -158,6 +162,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
               <TextInput
                 style={styles.input}
                 placeholder='Email'
+                autoCapitalize="none"  // Prevents auto-capitalization
                 keyboardType='email-address'
                 onChangeText={handleChange('email')}
                 onBlur={handleBlur('email')}
@@ -189,17 +194,17 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
 
               <View style={styles.radioContainer}>
                 <RadioButton
-                  value="M"
+                  value="male"
                   status={values.gender === 'male' ? 'checked' : 'unchecked'}
                   onPress={() => setFieldValue('gender', 'male')}
                 />
-                <Text>Male</Text>
+                <Text style={styles.radioText}>Male</Text>
                 <RadioButton
-                  value="F"
+                  value="female"
                   status={values.gender === 'female' ? 'checked' : 'unchecked'}
                   onPress={() => setFieldValue('gender', 'female')}
                 />
-                <Text>Female</Text>
+                <Text style={styles.radioText}>Female</Text>
               </View>
               {touched.gender && errors.gender && <Text style={styles.error}>{errors.gender}</Text>}
 
@@ -217,22 +222,105 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
                   value={values.termsAccepted}
                   onValueChange={(newValue) => setFieldValue('termsAccepted', newValue)}
                 />
-                <Text>I accept the terms and conditions*</Text>
+                <Text style={styles.checkboxText}>I accept the terms and conditions*</Text>
               </View>
               {touched.termsAccepted && errors.termsAccepted && <Text style={styles.error}>{errors.termsAccepted}</Text>}
 
               <SubmitButton
                 onPress={handleSubmit}
-                title='Submit'
-                gradient
+                title='Sign Up'
+                gradient={false}
+                style={styles.smButton}
               />
             </View>
           )}
         </Formik>
-      </LinearGradient>
-    </View>
+      </View>
+    </ScrollView>
   );
 };
 
+const styles = StyleSheet.create({
+  container: {
+    flexGrow: 1,
+    backgroundColor: 'rgba(255, 171, 0, 0.64)',
+    paddingHorizontal: 20,
+    justifyContent: 'center',
+  },
+  formContainer: {
+    borderRadius: 10,
+    padding: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+  },
+  backButton: {
+    position: 'absolute',
+    top: 10,
+    left: 10,
+    zIndex: 1,
+  },
+  backIcon: {
+    width: 24,
+    height: 24,
+    tintColor: '#000', // Adjust the color if needed
+  },
+  registerImage: {
+    width: '100%',
+    height: 100,
+    resizeMode: 'contain',
+    marginBottom: 20,
+    alignSelf: 'center',
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#333',
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+  input: {
+    height: 40,
+    borderColor: '#DDD',
+    borderWidth: 1,
+    borderRadius: 5,
+    marginBottom: 10,
+    paddingHorizontal: 10,
+    backgroundColor: '#FFF',
+  },
+  error: {
+    fontSize: 12,
+    color: '#D8000C',
+    marginBottom: 10,
+  },
+  radioContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  radioText: {
+    marginRight: 30,
+    fontSize: 16,
+    color: '#FFF',
+  },
+  checkboxContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  checkboxText: {
+    fontSize: 16,
+    color: '#FFF',
+    marginLeft: 10,
+  },
+  smButton: {
+    backgroundColor: 'grey', // Example: give it a different background color
+    marginTop: 10,
+    padding: 10,
+    borderRadius: 5,
+  }
+  
+});
 
 export default RegisterScreen;

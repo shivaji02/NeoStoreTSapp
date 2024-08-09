@@ -2,13 +2,14 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useRef } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Animated, Dimensions, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-
+import { useDispatch } from 'react-redux';
+import { logoutUser } from '../../../Redux/slices/authSlice';
+import { useRoute } from '@react-navigation/native';
 const { width } = Dimensions.get('window');
-
 const CustomDrawer: React.FC<{ isVisible: boolean; onClose: () => void }> = ({ isVisible, onClose }) => {
   const animation = useRef(new Animated.Value(-width)).current;
   const navigation = useNavigation();
-
+const dispatch = useDispatch();
   // Animate the drawer in or out based on isVisible prop
   React.useEffect(() => {
     Animated.timing(animation, {
@@ -19,10 +20,14 @@ const CustomDrawer: React.FC<{ isVisible: boolean; onClose: () => void }> = ({ i
   }, [isVisible]);
 
   const handleLogout = async () => {
-    console.log('Logout------');
-    await AsyncStorage.removeItem('accessToken');
-    navigation.navigate('LoginScreen');
+    console.log('Logout------cearning token',access_token);
+    dispatch(logoutUser());
+    const route = useRoute();
+    const payload = (route.params as { payload?: any })?.payload;
+    // Now you can use the payload in your component
+    navigation.navigate('LogInScreen');
   };
+
 
   return (
     <Animated.View style={[styles.drawerContainer, { transform: [{ translateX: animation }] }]}>

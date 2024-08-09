@@ -67,26 +67,27 @@ const HomeScreen: React.FC<{ ComponentId: string }> = () => {
         <ProductHList />
         <Text style={styles.title}>Shop Collection</Text>
         <ProductListView 
-          height={500}
-          image={require('../../Assets.xcassets/Images/gaintchair.png')}
-          bigText="king chair"
-          underlinedText="Shop Now"
-          onPress={() => console.log('Android king Pressed')}
-        />
-        <ProductListView 
-          height={300}
-          image={require('../../Assets.xcassets/Images/studiochair.png')}
-          bigText="studio chair"
-          underlinedText="Shop Now"
-          onPress={() => console.log('Couch Pressed')}
-        />
-        <ProductListView 
-          height={300}
-          image={require('../../Assets.xcassets/Images/beanchair.png')}
-          bigText="Bean Chair"
-          underlinedText="Shop Now"
-          onPress={() => console.log('Couch Pressed')}
-        />
+        height={500}
+        image={require('../../Assets.xcassets/Images/gaintchair.png')}
+        bigText="king chair"
+        underlinedText="Shop Now"
+        onPress={() => console.log('Android king Pressed')}
+      />
+      <ProductListView 
+        height={300}
+        image={require('../../Assets.xcassets/Images/studiochair.png')}
+        bigText="studio chair"
+        underlinedText="Shop Now"
+        onPress={() => console.log('Couch Pressed')}
+      />
+      <ProductListView 
+        height={300}
+        image={require('../../Assets.xcassets/Images/beanchair.png')}
+        bigText="Bean Chair"
+        underlinedText="Shop Now"
+        onPress={() => console.log('Couch Pressed')}
+      />
+
         <ProductVList/>
       </ScrollView>
     </View>
