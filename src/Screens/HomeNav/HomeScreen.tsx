@@ -10,7 +10,6 @@ import { selectCartItemCount } from '../../Redux/slices/cartSlice';
 import ProductListView from './ScreenComponents/ProductCard';
 import ProductHList from './ScreenComponents/HorizontalList';
 import ProductVList from './ScreenComponents/VerticalList';
-
 const HomeScreen: React.FC<{ ComponentId: string }> = () => {
   const navigation = useNavigation();
   const [isDrawerVisible, setDrawerVisible] = useState(false);

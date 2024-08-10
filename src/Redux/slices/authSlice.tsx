@@ -23,10 +23,10 @@ export const initializeAuth = createAsyncThunk(
   'auth/initializeAuth',
   async (_, { dispatch }) => {
      const accessToken = await AsyncStorage.getItem('access_token');
-    console.log('accessToken/////initialiseAuth', accessToken);
+//    console.log('accessToken/////initialiseAuth', accessToken); working
     if (accessToken) {
       dispatch(authSlice.actions.setAuth({ accessToken, isAuthenticated: true }));
-      console.log('SavedToken @ initialiseAuth', accessToken);
+      // console.log('SavedToken @ initialiseAuth', accessToken); working
 
       return { accessToken };
     } else {
@@ -67,10 +67,10 @@ export const loginUser = createAsyncThunk(
       console.log("accessToken",accessToken);
 
       if (accessToken) {
-        console.log('accessToken', accessToken);
+        console.log('accessToken@authSlice', accessToken);
         await AsyncStorage.setItem('access_token', accessToken);
 
-        console.log('SavedTokenlognThunk', accessToken);
+        console.log('SavedTokenlognThunk@post authSlice', accessToken);
       }
 
       return { accessToken };
@@ -106,7 +106,7 @@ const authSlice = createSlice({
     },
     setAuth: (state, action) => {
       state.access_token = action.payload.accessToken;
-      state.isAuthenticated = action.payload.isAuthenticated;
+      // state.isAuthenticated = action.payload.isAuthenticated;
     },
   },
   extraReducers: (builder) => {

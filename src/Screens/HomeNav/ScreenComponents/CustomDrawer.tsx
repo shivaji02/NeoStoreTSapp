@@ -1,10 +1,12 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useRef } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Animated, Dimensions, Image } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Animated, Dimensions, Image,Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch } from 'react-redux';
 import { logoutUser } from '../../../Redux/slices/authSlice';
 import { useRoute } from '@react-navigation/native';
+import Toast from 'react-native-toast-message';
+
 const { width } = Dimensions.get('window');
 const CustomDrawer: React.FC<{ isVisible: boolean; onClose: () => void }> = ({ isVisible, onClose }) => {
   const animation = useRef(new Animated.Value(-width)).current;
@@ -19,16 +21,53 @@ const dispatch = useDispatch();
     }).start();
   }, [isVisible]);
 
-  const handleLogout = async () => {
-    console.log('Logout------cearning token',access_token);
-    dispatch(logoutUser());
-    const route = useRoute();
-    const payload = (route.params as { payload?: any })?.payload;
-    // Now you can use the payload in your component
-    navigation.navigate('LogInScreen');
+  const handleLogout = () => {
+    // Show a confirmation alert before logging out
+    Alert.alert(
+      "Confirm Logout",
+      "Are you sure you want to log out?",
+      [
+        {
+          text: "Cancel",
+          onPress: () => Toast.show({
+            type: 'info',
+            text1: 'Logout Canceled',
+            text2: 'You have canceled the logout operation.',
+            position: 'top',
+            visibilityTime:1500,  //handle taoast visible time
+          }),
+          style: "cancel"
+        },
+        {
+          text: "OK",
+          onPress: async () => {
+            console.log('Logout confirmed, clearing token');
+  
+            // Clear token from AsyncStorage
+            await AsyncStorage.removeItem('access_token');
+  
+            // Dispatch logout action to clear Redux state
+            dispatch(logoutUser());
+  
+            // Show a toast confirming the logout
+            Toast.show({
+              type: 'success',
+              text1: 'Logged Out',
+              text2: 'You have successfully logged out.',
+              position: 'top',
+              visibilityTime:1500,  //handle taoast visible time
+            });
+  
+            // Navigate to login screen
+            navigation.navigate('LoginScreen');
+
+          }
+        }
+      ],
+      { cancelable: true }
+    );
   };
-
-
+  
   return (
     <Animated.View style={[styles.drawerContainer, { transform: [{ translateX: animation }] }]}>
       <TouchableOpacity onPress={onClose} style={styles.closeButton}>
@@ -36,8 +75,8 @@ const dispatch = useDispatch();
       </TouchableOpacity>
 
       <View style={styles.drawerContent}>
-        <TouchableOpacity onPress={() => navigation.navigate('MyAccount')}>
-          <Text style={styles.drawerItem}>My Account</Text>
+      <TouchableOpacity onPress={() => navigation.navigate('UserDetails')}>
+      <Text style={styles.drawerItem}>My Account</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate('Cart')}>
           <Text style={styles.drawerItem}>Cart</Text>
@@ -45,6 +84,13 @@ const dispatch = useDispatch();
         <TouchableOpacity onPress={() => navigation.navigate('Notifications')}>
           <Text style={styles.drawerItem}>Notifications</Text>
         </TouchableOpacity>
+        <TouchableOpacity onPress={()=>navigation.navigate('UpdateDetails')}>
+          <Text style ={styles.drawerItem} >Update Details</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={()=>navigation.navigate('changePassword')}>
+          <Text style ={styles.drawerItem} >Change Password</Text>
+        </TouchableOpacity>
+
       </View>
 
       <View style={styles.logoutContainer}>

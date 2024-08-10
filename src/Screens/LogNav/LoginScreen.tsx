@@ -130,7 +130,7 @@ const LogInScreen = ({ navigation }: LogInScreenNavigationProp) => {
         </View>
         {loading && <ActivityIndicator animating={true} color="red" />}
 
-        <CustomButton text="Sign Up" onPress={handleLogin} disabled={isButtonDisabled || loading} />
+        <CustomButton text="Sign In" onPress={handleLogin} disabled={isButtonDisabled || loading} />
 
       </View>
     </View>
