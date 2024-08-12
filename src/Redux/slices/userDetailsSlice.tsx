@@ -29,14 +29,17 @@ if (!accessToken) {
     throw new Error('Access token is missing');
 }
 
-      const response = await axiosInstance.get('user/getUserData', {
+      const response = await axiosInstance.get('users/getUserData', {
         headers: {
-            Authorization: `Bearer ${accessToken}`,
+            access_token: `${accessToken}`,
         },
       });
-      console.log(response.data.user_data,"response.data.user_data");
-      return response.data;
+      console.log(response.data.data.user_data,"response.data.user_data");
+      
+      return response.data.data.user_data;
+
     } catch (error: any) {
+        console.log(error);
         console.log(`Failed to fetch user details ${error.response?.data?.message}`);
       return rejectWithValue(error.response?.data?.message || 'Failed to fetch user details');
     }
@@ -57,7 +60,9 @@ export const updateUser = createAsyncThunk(
         },
       });
       console.log("reponse details", response.data)
+      
       return response.data;
+
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || 'Failed to update user details');
     }
@@ -135,3 +140,4 @@ export const selectUserDetails = (state: RootState) => state.user;
 export const { reducer: userDetailsReducer } = userDetailsSlice;
 
 export default userDetailsReducer;
+

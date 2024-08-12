@@ -7,6 +7,7 @@ type RootStackParamList = {
     Profile: { userId: string };
     Settings: undefined;
     Login: undefined;
+    ProductList: { categoryId: string };
 };
 
 // Define the navigation props type for each screen
@@ -42,3 +43,8 @@ export type LoginscreenProps = {
 
 
 export type { RootStackParamList, LogInScreenNavigationProp };
+
+export type ProductListScreenProps = { 
+    navigation: StackNavigationProp<RootStackParamList, 'ProductList'>;
+    route: RouteProp<RootStackParamList, 'ProductList'>;
+};

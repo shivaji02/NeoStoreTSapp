@@ -56,26 +56,19 @@ export const loginUser = createAsyncThunk(
   async ({ formData }: { formData: any }, { rejectWithValue }) => {
     try {
       const { email, password } = formData;
-      if (!email || !password) throw new Error('Invalid form data');
+      if (!email || !password) throw new Error('Please provide both email and password');
 
       const response = await axiosInstance.post('/users/login', { email, password });
 
-      console.log('Full Response Data in login:', response.data.data);
-
       const accessToken = response.data.data.access_token;
-      
-      console.log("accessToken",accessToken);
 
       if (accessToken) {
-        console.log('accessToken@authSlice', accessToken);
         await AsyncStorage.setItem('access_token', accessToken);
-
-        console.log('SavedTokenlognThunk@post authSlice', accessToken);
       }
 
       return { accessToken };
     } catch (error: any) {
-      const errorMessage = error.response?.data?.message || 'Failed to Login';
+      const errorMessage = error.response?.data?.message || 'Failed to login. Please check your credentials and try again.';
       return rejectWithValue(errorMessage);
     }
   }
@@ -93,7 +86,7 @@ export const forgotPassword = createAsyncThunk(
   }
 );
 
-const authSlice = createSlice({
+export const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {

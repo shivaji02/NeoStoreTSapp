@@ -128,7 +128,7 @@ const LogInScreen = ({ navigation }: LogInScreenNavigationProp) => {
             Forgot password?
           </Text>
         </View>
-        {loading && <ActivityIndicator animating={true} color="red" />}
+        {!loading && <ActivityIndicator animating={true} color="red" />}
 
         <CustomButton text="Sign In" onPress={handleLogin} disabled={isButtonDisabled || loading} />
 

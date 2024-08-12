@@ -10,6 +10,9 @@ import { selectCartItemCount } from '../../Redux/slices/cartSlice';
 import ProductListView from './ScreenComponents/ProductCard';
 import ProductHList from './ScreenComponents/HorizontalList';
 import ProductVList from './ScreenComponents/VerticalList';
+import ProductList from '../Product/ProductList';
+
+
 const HomeScreen: React.FC<{ ComponentId: string }> = () => {
   const navigation = useNavigation();
   const [isDrawerVisible, setDrawerVisible] = useState(false);
@@ -25,6 +28,11 @@ const HomeScreen: React.FC<{ ComponentId: string }> = () => {
   const handleDrawerPress = () => {
     console.log('Drawer opened');
     setDrawerVisible(!isDrawerVisible);
+  };
+
+  const handleCategorySelect = (categoryId: string) => {
+    console.log('Category Selected: ', categoryId);
+    navigation.navigate('ProductList', { categoryId });
   };
 
   const handleCartPress = () => {
@@ -64,28 +72,34 @@ const HomeScreen: React.FC<{ ComponentId: string }> = () => {
           />
         </View>
         <ProductHList />
-        <Text style={styles.title}>Shop Collection</Text>
+        <Text style={styles.title}>Shop Category</Text>
+      
+      <ProductListView 
+        image={require('../../Assets.xcassets/Images/category/table.png')}
+        bigText="Tables"
+        underlinedText="Shop Now"
+        onPress={() => handleCategorySelect('1')}
+      />
         <ProductListView 
-        height={500}
-        image={require('../../Assets.xcassets/Images/gaintchair.png')}
-        bigText="king chair"
+        image={require('../../Assets.xcassets/Images/category/chair.png')}
+        bigText=" chairs"
         underlinedText="Shop Now"
-        onPress={() => console.log('Android king Pressed')}
+        onPress={() => handleCategorySelect('2')}
       />
+        <ProductListView 
+        image={require('../../Assets.xcassets/Images/category/sofas.png')}
+        bigText="Sofas"
+        underlinedText="Shop Now"
+        onPress={() => handleCategorySelect('3')}
+      />
+      
       <ProductListView 
-        height={300}
-        image={require('../../Assets.xcassets/Images/studiochair.png')}
-        bigText="studio chair"
+        image={require('../../Assets.xcassets/Images/category/cupboard.jpg')}
+        bigText="cupboards"
         underlinedText="Shop Now"
-        onPress={() => console.log('Couch Pressed')}
+        onPress={() => handleCategorySelect('4')}
       />
-      <ProductListView 
-        height={300}
-        image={require('../../Assets.xcassets/Images/beanchair.png')}
-        bigText="Bean Chair"
-        underlinedText="Shop Now"
-        onPress={() => console.log('Couch Pressed')}
-      />
+
 
         <ProductVList/>
       </ScrollView>

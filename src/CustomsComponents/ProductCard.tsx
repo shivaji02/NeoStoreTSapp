@@ -43,6 +43,8 @@ const styles = StyleSheet.create({
         height:160,
         borderTopLeftRadius:8,
         borderTopRightRadius:8,
+        // resizeMode:'cover',
+        objectFit:'contain',
     },
     hotBadge:{
         position:'absolute',

@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchProducts, selectProducts } from "../../../Redux/slices/productSlice";
 import ProductCard from "../../../CustomsComponents/ProductCard";
 import styles from "../../../../styles";
-import { AppDispatch, RootState } from "../../../Redux/store";
 
 interface Product{
     id: number;

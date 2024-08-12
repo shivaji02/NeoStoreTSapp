@@ -10,7 +10,7 @@ const UserDetails = () => {
     const dispatch = useDispatch();
 
     // Select user details, loading, and error states from Redux store
-    const { user, loading, error } = useSelector(selectUserDetails);
+    const { user, loading, error } = useSelector(selectUserDetails) as { user: UserType, loading: boolean, error: string };
 
     // Fetch user details when the component mounts
     useEffect(() => {

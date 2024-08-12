@@ -12,7 +12,7 @@ const ProductHList: React.FC = () => {
   const { products, loading, error } = useSelector(selectProducts);
 
   useEffect(() => {
-    const categoryId = '1'; // Example category ID
+    const categoryId = '2'; // Example category ID
     dispatch(fetchProducts({ categoryId, limit: 10, page: 1 }));
   }, [dispatch]);
 
@@ -91,8 +91,9 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   productImage: {
-    width: '100%',
-    height: 150,
+    resizeMode: 'center',
+    // width: '80%',
+    height: 140,
     borderRadius: 8,
     marginTop:10,
   },
@@ -100,7 +101,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 10,
     left: 10,
-    backgroundColor: '#fff',
+    backgroundColor: 'red',
+    color: '#fff',
     paddingVertical: 2,
     paddingHorizontal: 8,
     borderRadius: 12,

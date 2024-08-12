@@ -4,7 +4,7 @@ import { RootState } from "../store";
 import axiosInstance from "../../Screens/mislenous/axiosInstance";
 
  export interface ProductState { 
-    products:any[];
+    products:Product[];
     productDetails:any | null;
     loading:boolean;
     error:string|null;
@@ -37,28 +37,48 @@ export const fetchProducts = createAsyncThunk(
                     page,
                 },
             });
+            // console.log(response.data);
+            // console.log("response.data.data",response.data.data);
+            console.log("Api fetched all response as intended");
             return response.data.data;
-            console.log(response.data);
-            console.log(response.data.data);
+           
         }catch(error:any){
             return rejectWithValue(error.response?.data?.message || 'Failed to fetch products');
         }
     }
 );
 
-
+//single product details
 export const fetchProductDetails = createAsyncThunk(
     'products/fetchProductDetails',
-    async (productId:string, {rejectWithValue}) =>{
-        try{
-            const response = await axiosInstance.get('products');
+    async ({ product_id }: { product_id: string }, { rejectWithValue }) => {
+        try {
+            const response = await axiosInstance.get('/products/getDetail', {
+                params: {
+                    product_id: product_id,
+                },
+            });
             return response.data.data;
-        }catch(error:any){
-            return rejectWithValue(error.response?.data?.message || 'Failed to fetch products details');
+        } catch (error: any) {
+            return rejectWithValue(error.response?.data?.message || 'Failed to fetch product details');
         }
     }
 );
 
+export const productRating = createAsyncThunk(
+    'products/productRating',
+    async ({ product_id, rating }: { product_id: string; rating: number }, { rejectWithValue }) => {
+        try {
+            const response = await axiosInstance.post('/products/setRating', {
+                product_id,
+                rating: rating || 3,
+            });
+            return response.data.data;
+        } catch (error: any) {
+            return rejectWithValue(error.response?.data?.message || 'Failed to rate product');
+        }
+    }
+);
 
 
 const productSlice = createSlice({
@@ -96,6 +116,9 @@ extraReducers:(builder)=>{
 });
 
 export const selectProducts = (state:RootState)=>state.products;
+export const selectProductDetails = (state:RootState)=>state.products.productDetails;
+export const selectProductLoading = (state:RootState)=>state.products.loading;  
+export const selectProductError = (state:RootState)=>state.products.error;
 export default productSlice.reducer;
 
 
