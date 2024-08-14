@@ -1,51 +1,25 @@
-// import { View, Text } from "react-native";
-// import HeadBack from "../../CustomsComponents/BackWithTitle";
-
-// const CartList   = () => {
-//     return (
-//         <View>
-//             <HeadBack title="Cart List" showIcon={false} />
-//             <Text>Cart List</Text>
-//         </View>
-//     );
-// }
-
-// export default CartList;   
 import React, { useEffect } from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { listCartItems, addToCart, removeFromCart, changeCartQuantity, selectCartItemCount } from '../../Redux/slices/cartSlice';
+import { listCartItems, changeCartQuantity, removeFromCart } from '../../Redux/slices/cartSlice';
 import { RootState } from '../../Redux/store';
 import HeadBack from '../../CustomsComponents/BackWithTitle';
 
-interface CartItem {
-    productId: string; // or number, based on your data structure
-    productName: string;
-    productPrice: number;
-    productImage: string;
-    quantity: number;
-}
-
-// Adjusted CartList Component
-
 const CartList: React.FC = () => {
     const dispatch = useDispatch();
-    const cartItems = useSelector((state: RootState) => state.cart.items);
-    console.log('no useeffect cartItems', cartItems);
+    const cartItems = useSelector((state: RootState) => state.cart.cartItems);
     const loading = useSelector((state: RootState) => state.cart.loading);
 
     useEffect(() => {
         dispatch(listCartItems());
-        console.log('cartItems', cartItems);
+        console.log('cartItems in useEffect:', cartItems);
     }, [dispatch]);
 
-    const cartItemCount = useSelector(selectCartItemCount);  // Get cart item count from Redux
-
-    const handleIncreaseQuantity = (productId: string) => {
+    const handleIncreaseQuantity = (productId: number) => {
         dispatch(changeCartQuantity({ productId, quantity: 1 }));
     };
 
-    const handleDecreaseQuantity = (productId: string, currentQuantity: number) => {
+    const handleDecreaseQuantity = (productId: number, currentQuantity: number) => {
         if (currentQuantity > 1) {
             dispatch(changeCartQuantity({ productId, quantity: -1 }));
         } else {
@@ -53,38 +27,42 @@ const CartList: React.FC = () => {
         }
     };
 
-    const renderCartItem = ({ item }: { item: CartItem }) => (
-        <View style={styles.cartItemContainer}>
-            <Image source={{ uri: item.productImage }} style={styles.productImage} />
-            <View style={styles.productDetails}>
-                <Text style={styles.productName}>{item.productName}</Text>
-                <Text style={styles.productPrice}>${item.productPrice.toFixed(2)}</Text>
-                <View style={styles.quantityContainer}>
-                    <TouchableOpacity onPress={() => handleDecreaseQuantity(item.productId, item.quantity)}>
-                        <Text style={styles.quantityControl}>-</Text>
-                    </TouchableOpacity>
-                    <Text style={styles.quantityText}>{item.quantity}</Text>
-                    <TouchableOpacity onPress={() => handleIncreaseQuantity(item.productId)}>
-                        <Text style={styles.quantityControl}>+</Text>
-                    </TouchableOpacity>
+    const renderCartItem = ({ item }: { item: CartItem }) => {
+        const productId = item.product.id; // Use product.id as the productId
+        return (
+            <View style={styles.cartItemContainer}>
+                <Image source={{ uri: item.product.product_images }} style={styles.productImage} />
+                <View style={styles.productDetails}>
+                    <Text style={styles.productName}>{item.product.name}</Text>
+                    <Text style={styles.productPrice}>${item.product.cost.toFixed(2)}</Text>
+                    <View style={styles.quantityContainer}>
+                        <TouchableOpacity onPress={() => handleDecreaseQuantity(productId, item.quantity)}>
+                            <Text style={styles.quantityControl}>-</Text>
+                        </TouchableOpacity>
+                        <Text style={styles.quantityText}>{item.quantity}</Text>
+                        <TouchableOpacity onPress={() => handleIncreaseQuantity(productId)}>
+                            <Text style={styles.quantityControl}>+</Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
             </View>
-        </View>
-    );
+        );
+    };
 
     return (
         <View style={styles.container}>
-            <HeadBack title="Products" showIcon={false} />
-            <Text style={styles.title}>Your Cargfhvbjnmnbvgcfhdxt</Text>
+            <HeadBack title="Your Cart" showIcon={false} />
             {loading ? (
                 <Text style={styles.emptyCartText}>Loading cart...</Text>
-            ) : 
+            ) : cartItems.length > 0 ? (
                 <FlatList
                     data={cartItems}
                     renderItem={renderCartItem}
-                    keyExtractor={(item) => item.productId.toString()}
+                    keyExtractor={(item) => item.product.id.toString()} // Use product.id as the key
                 />
-             }
+            ) : (
+                <Text style={styles.emptyCartText}>Your cart is empty.</Text>
+            )}
         </View>
     );
 };

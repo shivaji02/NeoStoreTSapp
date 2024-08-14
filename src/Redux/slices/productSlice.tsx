@@ -73,12 +73,15 @@ export const productRating = createAsyncThunk(
                 product_id,
                 rating: rating || 3,
             });
+            console.log("rating updated",rating)
+
             return response.data.data;
         } catch (error: any) {
             return rejectWithValue(error.response?.data?.message || 'Failed to rate product');
         }
     }
 );
+
 
 
 const productSlice = createSlice({
@@ -109,8 +112,20 @@ extraReducers:(builder)=>{
     })
     builder.addCase(fetchProductDetails.rejected,(state,action:PayloadAction<string | null>)=>{
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.payload as string;
+    })
+    .addCase(productRating.pending, (state) => {
+        state.loading = true;
+    })
+    .addCase(productRating.fulfilled, (state, action) => {
+        state.loading = false;
+        state.productDetails.rating = action.payload.rating;
+    })
+    .addCase(productRating.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
     });
+
 },
 
 });

@@ -14,8 +14,10 @@ const ProductCard: React.FC<{item: Product}> = ({item}) => {
         <View style = {styles.card}>
             <Image source = {{uri: item.product_images}} style = {styles.productImage}/>
             {/* <Text style = {styles.newBadge}>NEW</Text> */}
-            <Text style ={styles.hotBadge}>HOT</Text>
-            <View style={styles.productDetails}>
+            
+                <Image source={require('../Assets.xcassets/Images/graphIcon.png')} style={styles.graphIcon} />
+
+                        <View style={styles.productDetails}>
                 <View style={styles.ratingContainer}>
                     <Text style={styles.ratingStars}>{'★'.repeat(item.rating)}</Text>
                     </View>
@@ -46,17 +48,15 @@ const styles = StyleSheet.create({
         // resizeMode:'cover',
         objectFit:'contain',
     },
-    hotBadge:{
+    graphIcon:{
         position:'absolute',
         top:8,
         right:8,
-        backgroundColor:'fff',
-        color:'black',
-        padding:4,
-        borderRadius:4,
+        height:20,
+        width:20,
+        color:'red',
         paddingVertical:2,
         paddingHorizontal:6,
-        fontSize:12,
         fontWeight:'bold',
     },
     productDetails:{

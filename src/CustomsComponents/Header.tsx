@@ -1,9 +1,10 @@
 import React from 'react';
 import { View, Text, StyleSheet,Image, TouchableOpacity } from 'react-native';
 // import Icon from 'react-native-vector-icons/Ionicons';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { selectCartItemCount } from '../Redux/slices/cartSlice';  // Import cart selector
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import CartIcon from './cartIcon';
 interface HeaderProps {
   title?: string;
   cartItemCount?: number;
@@ -12,9 +13,12 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ title = 'NeoStore', onDrawerPress, onCartPress }) => {
+
+  const dispatch = useDispatch();
+  const accessToken = AsyncStorage.getItem('access_token');
   const cartItemCount = useSelector(selectCartItemCount);  // Get cart item count from Redux
 
-
+console.log('access token--',accessToken);
   return (
      <View style={styles.headerContainer}>
       <View style={styles.Drawicon}>
@@ -23,14 +27,15 @@ const Header: React.FC<HeaderProps> = ({ title = 'NeoStore', onDrawerPress, onCa
         </TouchableOpacity>
         <Text style={styles.title}>{title}</Text>
       </View>
-      <TouchableOpacity style={styles.cartIcon} onPress={onCartPress}>
+      <CartIcon />
+      {/* <TouchableOpacity style={styles.cartIcon} onPress={onCartPress}>
         <Image source={require('../Assets.xcassets/Images/cartIcon.png')} style={styles.Carticon} />
         {cartItemCount > 0 && (
           <View style={styles.badge}>
             <Text style={styles.badgeText}>{cartItemCount}</Text>
           </View>
         )}
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </View>
   );
 };
@@ -48,6 +53,10 @@ const styles = StyleSheet.create({
     gap: 150,
     marginTop:5,
   },
+  CartIcon:{
+    width: 50,
+    height: 28,
+  },
   
   title: {
     color: 'black',
@@ -60,22 +69,22 @@ const styles = StyleSheet.create({
     marginLeft: 'auto',
     
   },
-  badge: {
-    position: 'absolute',
-    top: -4,
-    right: -6,
-    backgroundColor: 'red',
-    borderRadius: 8,
-    width: 16,
-    height: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  badgeText: {
-    color: 'white',
-    fontSize: 10,
-    fontWeight: 'bold',
-  },
+  // badge: {
+  //   position: 'absolute',
+  //   top: -4,
+  //   right: -6,
+  //   backgroundColor: 'red',
+  //   borderRadius: 8,
+  //   width: 16,
+  //   height: 16,
+  //   alignItems: 'center',
+  //   justifyContent: 'center',
+  // },
+  // badgeText: {
+  //   color: 'white',
+  //   fontSize: 10,
+  //   fontWeight: 'bold',
+  // },
   icon: {
     width: 50,
     height: 28,

@@ -1,6 +1,6 @@
 import styles from '../../../styles';
 import React, { useState } from 'react';
-import { View, Text, ScrollView, Image, Animated, StyleSheet } from 'react-native';
+import { View, Text, Image, Animated, StyleSheet, ScrollView } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 import CustomButton from '../../CustomsComponents/customButton';
@@ -11,7 +11,8 @@ import ProductListView from './ScreenComponents/ProductCard';
 import ProductHList from './ScreenComponents/HorizontalList';
 import ProductVList from './ScreenComponents/VerticalList';
 import ProductList from '../Product/ProductList';
-
+import CartScreen from '../Cart/CartList';
+// import { ScrollView } from 'react-native-gesture-handler';
 
 const HomeScreen: React.FC<{ ComponentId: string }> = () => {
   const navigation = useNavigation();
@@ -37,18 +38,20 @@ const HomeScreen: React.FC<{ ComponentId: string }> = () => {
 
   const handleCartPress = () => {
     console.log('Cart opened');
+    navigation.navigate('CartList');
   };
 
   return (
     <View style={styles.container}>
       <Header 
-        onDrawerPress={handleDrawerPress}
+        onDrawerPress={handleDrawerPress} 
         onCartPress={handleCartPress}
         cartItemCount={cartItemCount}
       />
       <CustomDrawer isVisible={isDrawerVisible} onClose={() => setDrawerVisible(false)} />
 
-      <ScrollView>
+      <ScrollView >
+        
         <View style={styles.contentContainer}>
           <Text style={styles.heading}>Feel All</Text>
           <Text style={styles.subheading}>New 
@@ -74,32 +77,38 @@ const HomeScreen: React.FC<{ ComponentId: string }> = () => {
         <ProductHList />
         <Text style={styles.title}>Shop Category</Text>
       
-      <ProductListView 
-        image={require('../../Assets.xcassets/Images/category/table.png')}
-        bigText="Tables"
-        underlinedText="Shop Now"
-        onPress={() => handleCategorySelect('1')}
-      />
-        <ProductListView 
-        image={require('../../Assets.xcassets/Images/category/chair.png')}
-        bigText=" chairs"
-        underlinedText="Shop Now"
-        onPress={() => handleCategorySelect('2')}
-      />
-        <ProductListView 
-        image={require('../../Assets.xcassets/Images/category/sofas.png')}
-        bigText="Sofas"
-        underlinedText="Shop Now"
-        onPress={() => handleCategorySelect('3')}
-      />
+      {[{
+        image: require('../../Assets.xcassets/Images/category/table.png'),
+        bigText: "Tables",
+        underlinedText: "Shop Now",
+        onPress: () => handleCategorySelect('1')
+      }, {
+        image: require('../../Assets.xcassets/Images/category/chair.png'),
+        bigText: " chairs",
+        underlinedText: "Shop Now",
+        onPress: () => handleCategorySelect('2')
+      }, {
+        image: require('../../Assets.xcassets/Images/category/sofas.png'),
+        bigText: "Sofas",
+        underlinedText: "Shop Now",
+        onPress: () => handleCategorySelect('3')
+      }, {
+        image: require('../../Assets.xcassets/Images/category/cupboard.jpg'),
+        bigText: "cupboards",
+        underlinedText: "Shop Now",
+        onPress: () => handleCategorySelect('4')
+      }].map((item, index) => (
       
-      <ProductListView 
-        image={require('../../Assets.xcassets/Images/category/cupboard.jpg')}
-        bigText="cupboards"
-        underlinedText="Shop Now"
-        onPress={() => handleCategorySelect('4')}
-      />
-
+      
+        <ProductListView
+          key={index}
+          image={item.image}
+          bigText={item.bigText}
+          underlinedText={item.underlinedText}
+          onPress={item.onPress}
+        />
+      ))}
+{/*  Above code is for the ProductListView component which is used to display the product list in the home screen. but rendereing once using map */}
 
         <ProductVList/>
       </ScrollView>

@@ -9,6 +9,7 @@ interface SubmitButtonProps {
   title: string;
 }
 
+
 const SubmitButton: React.FC<SubmitButtonProps> = ({ onPress, style, gradient, title }) => {
   const buttonStyle = [styles.csbutton, style];
 

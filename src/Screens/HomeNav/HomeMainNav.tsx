@@ -7,6 +7,7 @@ import UpdateDetails from './UserAccount/UpdateDetails';
 import changePassword from './UserAccount/ChangePassword';
 import ProductList from '../Product/ProductList';
 import ProductDetail from '../Product/ProductDetail';
+import CartList from '../Cart/CartList';
 const Stack = createStackNavigator();
 
 const HomeMainNav: React.FC = () => {
@@ -19,6 +20,7 @@ const HomeMainNav: React.FC = () => {
         <Stack.Screen options={{headerShown:false}} name ="changePassword" component ={changePassword}/>
         <Stack.Screen options={{headerShown:false}} name ="ProductList" component ={ProductList}/>
         <Stack.Screen options={{headerShown:false}} name ="ProductDetail" component ={ProductDetail}/>
+        <Stack.Screen options={{headerShown:false}} name ="CartList" component ={CartList}/>
         
         </Stack.Navigator>
   );

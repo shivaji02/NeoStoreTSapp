@@ -1,14 +1,23 @@
 import React, { useEffect } from 'react';
 import { View, Text, Image, StyleSheet, FlatList, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigation } from '@react-navigation/native';
 import { fetchProducts, selectProducts } from '../../../Redux/slices/productSlice';
 import { AppDispatch, RootState } from '../../../Redux/store';
 import { addToCart } from '../../../Redux/slices/cartSlice';
 
+interface Product {
+  id: number;
+  name: string;
+  cost: number;
+  rating: number;
+  product_images: string;
 
+}
 
 const ProductHList: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
+  const navigation = useNavigation();  // Get the navigation object
   const { products, loading, error } = useSelector(selectProducts);
 
   useEffect(() => {
@@ -16,38 +25,41 @@ const ProductHList: React.FC = () => {
     dispatch(fetchProducts({ categoryId, limit: 10, page: 1 }));
   }, [dispatch]);
 
-
-  const renderProduct = ({ item }: { item: Products }) => (
-    <View style={styles.productContainer}>
-      <Image source={{ uri: item.product_images }} style={styles.productImage} />
-      <Text style={styles.newBadge}>NEW</Text>
-      <TouchableOpacity style={styles.favoriteIcon}>
-        <Text>❤️</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.addToCartButton} onPress={() => handleAddToCart(item)}>
-        <Text style={styles.addToCartButtonText}>Add to cart</Text>
-      </TouchableOpacity>
-      <View style={styles.productDetails}>
-        <View style={styles.ratingContainer}>
-          <Text style={styles.ratingStars}>{'★'.repeat(item.rating)}</Text>
-        </View>
-        <Text style={styles.productName}>{item.name}</Text>
-        <Text style={styles.productPrice}>${item.cost.toFixed(2)}</Text>
-      </View>
-    </View>
-  );
-
-  type Product = {
-    id: number;
-    quantity: number;}
+  const handleProductPress = (product_id: string) => {
+    // Navigate to ProductDetail screen and pass the product ID
+    navigation.navigate('ProductDetail', { product_id: product_id } as object);
+  };
 
   const handleAddToCart = (item: Product) => {
-    dispatch(addToCart({ productId:item.id, quantity: 1 }));
+    dispatch(addToCart({ productId: item.id, quantity: 1 }));
     console.log('Added to cart:', item.id);
   };
 
+  const renderProduct = ({ item }: { item: Product }) => (
+    <TouchableOpacity onPress={() => handleProductPress(item.id.toString())}>
+      <View style={styles.productContainer}>
+        <Image source={{ uri: item.product_images }} style={styles.productImage} />
+        <Text style={styles.newBadge}>NEW</Text>
+        <TouchableOpacity style={styles.favoriteIcon}>
+          <Text>❤️</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.addToCartButton} onPress={() => handleAddToCart(item)}>
+          <Text style={styles.addToCartButtonText}>Add to cart</Text>
+        </TouchableOpacity>
+        <View style={styles.productDetails}>
+          <View style={styles.ratingContainer}>
+            <Text style={styles.ratingStars}>{'★'.repeat(item.rating)}</Text>
+          </View>
+          <Text style={styles.productName}>{item.name}</Text>
+          <Text style={styles.productPrice}>${item.cost.toFixed(2)}</Text>
+        </View>
+      </View>
+    </TouchableOpacity>
+  );
+
   if (loading) {
-    return <ActivityIndicator size="large" color="#000" />;
+    return 
+    <ActivityIndicator size="large" color="#000" />;
   }
 
   if (error) {
@@ -79,7 +91,7 @@ const styles = StyleSheet.create({
   },
   productContainer: {
     width: 200,
-    height:300,
+    height: 300,
     padding: 8,
     backgroundColor: '#fff',
     borderRadius: 8,
@@ -92,10 +104,9 @@ const styles = StyleSheet.create({
   },
   productImage: {
     resizeMode: 'center',
-    // width: '80%',
     height: 140,
     borderRadius: 8,
-    marginTop:10,
+    marginTop: 10,
   },
   newBadge: {
     position: 'absolute',
@@ -140,8 +151,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   ratingStars: {
-    // color: '#f8c102',
-    color:'black',
+    color: 'black',
   },
   error: {
     color: 'red',
