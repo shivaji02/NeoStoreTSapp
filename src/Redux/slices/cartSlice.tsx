@@ -3,19 +3,30 @@ import axiosInstance from '../../Screens/mislenous/axiosInstance';
 import { RootState } from '../store';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+// Define the shape of the cart item
+interface CartItem {
+  product_id: string;  // or number, based on your data structure
+  productName: string;
+  productPrice: number;
+  productImage: string;
+  quantity: number;
+}
+
+// Define the shape of the cart state
 interface CartState {
-  items: any;
-  cartItems: any[];
+  cartItems: CartItem[];
   loading: boolean;
   error: string | null;
 }
 
+// Initial state
 const initialState: CartState = {
   cartItems: [],
   loading: false,
   error: null,
 };
 
+// Utility function to get stored token
 export const getStoredToken = async () => {
   try {
     const token = await AsyncStorage.getItem('access_token');
@@ -26,13 +37,13 @@ export const getStoredToken = async () => {
   }
 };
 
+// Async thunk for adding to cart
 export const addToCart = createAsyncThunk(
   'cart/addToCart',
   async ({ productId, quantity }: { productId: string; quantity: number }, { rejectWithValue, getState }) => {
-    const state: any = getState();
+    const state: RootState = getState();
     const accessToken = state.auth.user?.access_token || await getStoredToken();
 
-    console.log('access token--for ---addToCartSLice---', accessToken);
     if (!accessToken) {
       return rejectWithValue('User not logged in');
     }
@@ -46,10 +57,9 @@ export const addToCart = createAsyncThunk(
         {
           headers: {
             access_token: accessToken,
-          }, 
+          },
         }
       );
-      console.log('response added to cart// add to cart item is working fine and response is good', );
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || 'Failed to add to cart');
@@ -57,12 +67,12 @@ export const addToCart = createAsyncThunk(
   }
 );
 
+// Async thunk for removing from cart
 export const removeFromCart = createAsyncThunk(
   'cart/removeFromCart',
-  async (productId: number, { rejectWithValue, getState }) => {
-    const state: any = getState();
+  async (productId: string, { rejectWithValue, getState }) => {
+    const state: RootState = getState();
     const accessToken = state.auth.user?.access_token;
-    console.log('access token--for ---removeFromCartSLice---', accessToken);
 
     if (!accessToken) {
       return rejectWithValue('User not logged in');
@@ -86,6 +96,7 @@ export const removeFromCart = createAsyncThunk(
   }
 );
 
+// Async thunk for listing cart items
 export const listCartItems = createAsyncThunk(
   'cart/listCartItems',
   async (_, { rejectWithValue, getState }) => {
@@ -97,8 +108,6 @@ export const listCartItems = createAsyncThunk(
       accessToken = await AsyncStorage.getItem('access_token');
     }
 
-    console.log('access token--for ---cartListFromCartSLice---', accessToken);
-
     if (!accessToken) {
       return rejectWithValue('User not logged in');
     }
@@ -109,43 +118,42 @@ export const listCartItems = createAsyncThunk(
           access_token: accessToken,
         },
       });
-      console.log('response of list cart items-----is working fine and response is good in [{}]');
-      return response.data.data;
+      return response.data.data || [];  // Ensure it always returns an array
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || 'Failed to fetch cart items');
     }
   }
 );
+
+// Async thunk for changing cart quantity
 export const changeCartQuantity = createAsyncThunk(
   'cart/changeCartQuantity',
-  async ({ productId, quantity }: { productId: number; quantity: number }, { rejectWithValue, getState }) => {
-      const state: RootState = getState() as RootState;
-      const accessToken = state.auth.user?.access_token;
-      console.log('access token--for ---EditFromCartSLice---', accessToken);
+  async ({ productId, quantity }: { productId: string; quantity: number }, { rejectWithValue, getState }) => {
+    const state: RootState = getState();
+    const accessToken = state.auth.user?.access_token || await getStoredToken();
 
-      if (!accessToken) {
-          return rejectWithValue('User not logged in');
-      }
+    if (!accessToken) {
+      return rejectWithValue('User not logged in');
+    }
 
-      try {
-          const response = await axiosInstance.post('/editCart',
-              {
-                  product_id: productId,
-                  quantity,
-              },
-              {
-                  headers: {
-                      access_token: accessToken,
-                  },
-              }
-          );
-          return response.data;
-      } catch (error: any) {
-          return rejectWithValue(error.response?.data?.message || 'Failed to change cart quantity');
-      }
+    try {
+      const response = await axiosInstance.post('/editCart',
+        {
+          product_id: productId,
+          quantity,
+        },
+        {
+          headers: {
+            access_token: accessToken,
+          },
+        }
+      );
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message || 'Failed to change cart quantity');
+    }
   }
 );
-
 
 const cartSlice = createSlice({
   name: 'cart',
@@ -156,7 +164,7 @@ const cartSlice = createSlice({
       state.loading = true;
       state.error = null;
     });
-    builder.addCase(addToCart.fulfilled, (state, action: PayloadAction<any>) => {
+    builder.addCase(addToCart.fulfilled, (state, action: PayloadAction<CartItem>) => {
       state.loading = false;
       state.cartItems.push(action.payload);
     });
@@ -169,7 +177,7 @@ const cartSlice = createSlice({
       state.loading = true;
       state.error = null;
     });
-    builder.addCase(removeFromCart.fulfilled, (state, action: PayloadAction<any>) => {
+    builder.addCase(removeFromCart.fulfilled, (state, action: PayloadAction<CartItem>) => {
       state.loading = false;
       state.cartItems = state.cartItems.filter(item => item.product_id !== action.payload.product_id);
     });
@@ -180,9 +188,8 @@ const cartSlice = createSlice({
 
     builder.addCase(listCartItems.pending, (state) => {
       state.loading = true;
-      // state.error = null;
     });
-    builder.addCase(listCartItems.fulfilled, (state, action: PayloadAction<any[]>) => {
+    builder.addCase(listCartItems.fulfilled, (state, action: PayloadAction<CartItem[]>) => {
       state.loading = false;
       state.cartItems = action.payload;
     });
@@ -190,9 +197,26 @@ const cartSlice = createSlice({
       state.loading = false;
       state.error = action.payload || 'Failed to fetch cart items';
     });
+
+    builder.addCase(changeCartQuantity.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(changeCartQuantity.fulfilled, (state, action: PayloadAction<CartItem>) => {
+      state.loading = false;
+      const index = state.cartItems.findIndex(item => item.product_id === action.payload.product_id);
+      if (index !== -1) {
+        state.cartItems[index] = action.payload;
+      }
+    });
+    builder.addCase(changeCartQuantity.rejected, (state, action: PayloadAction<string | null>) => {
+      state.loading = false;
+      state.error = action.payload;
+    });
   },
 });
 
+// Selectors
 export const selectCartItems = (state: RootState) => state.cart.cartItems;
-export const selectCartItemCount = (state: RootState) => state.cart.cartItems.length;  // Selector for cart item count
+export const selectCartItemCount = (state: RootState) => state.cart.cartItems.length;
+
 export default cartSlice.reducer;

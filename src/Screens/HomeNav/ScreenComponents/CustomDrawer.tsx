@@ -84,6 +84,10 @@ const dispatch = useDispatch();
         <TouchableOpacity onPress={() => navigation.navigate('Notifications')}>
           <Text style={styles.drawerItem}>Notifications</Text>
         </TouchableOpacity>
+        <TouchableOpacity onPress={()=>navigation.navigate('AddressScreen')}>
+          <Text style ={styles.drawerItem} >Manage your Address</Text>
+        </TouchableOpacity>
+
         <TouchableOpacity onPress={()=>navigation.navigate('UpdateDetails')}>
           <Text style ={styles.drawerItem} >Update Details</Text>
         </TouchableOpacity>

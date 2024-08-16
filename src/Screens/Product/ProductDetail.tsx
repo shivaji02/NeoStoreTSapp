@@ -1,15 +1,18 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, Image, ActivityIndicator, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
+import React, { Dispatch, useEffect, useState } from "react";
+import { View, Text, Image, ActivityIndicator, StyleSheet, TouchableOpacity, TextInput } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { fetchProductDetails, selectProductDetails, selectProductLoading, selectProductError, productRating } from "../../Redux/slices/productSlice";
 import HeadBack from "../../CustomsComponents/BackWithTitle";
 import { addToCart } from "../../Redux/slices/cartSlice";
 import SubmitButton from "../../CustomsComponents/submitButton";
+import { ScrollView } from "react-native-gesture-handler";
+import { UnknownAction } from "redux";
 const ProductDetail: React.FC = () => {
     const dispatch = useDispatch<Dispatch<UnknownAction>>();
     const route = useRoute();
     const { product_id } = route.params as { product_id: string };
+    const navigation = useNavigation();
 
     const productDetails = useSelector(selectProductDetails);
     const loading = useSelector(selectProductLoading);
@@ -32,7 +35,8 @@ const ProductDetail: React.FC = () => {
         console.log('Product added to cart', product_id);
     };
     const handlePlacingOrder = () => {
-        console.log("Order Placed");
+        console.log("Order Place Button Clicked");
+        navigation.navigate('AddressConfirmation');
     }
 
     if (loading) {
@@ -54,7 +58,7 @@ const ProductDetail: React.FC = () => {
     if (!productDetails) {
         return (
             <>
-                <HeadBack title="Product Details" />
+                <HeadBack title="Product Details"  showIcon={false}/>
                 <View style={styles.errorContainer}>
                     <Text style={styles.errorText}>Product details not available</Text>
                 </View>
@@ -77,22 +81,29 @@ const ProductDetail: React.FC = () => {
                 <Text style={styles.productRating}>Tap on the Star You would like to rate </Text>
                 {/* <Text style={styles.productRating}>Current Rating: {rating}</Text> */}
                 <View style={styles.ratingContainer}>
+
                     {Array(5).fill(0).map((_, index) => (
                         <TouchableOpacity key={index} onPress={() => handleRatingPress(index + 1)}>
-                            <Text style={[styles.productRating, { color: (selectedRating !== null ? selectedRating : rating) > index ? '#FFD700' : '#888' }]}>
+                            <Text style={[styles.productRatingStar, { color: (selectedRating !== null ? selectedRating : rating) > index ? '#FFD700' : '#888' }]}>
                                 ⭐️
                             </Text>
+
                         </TouchableOpacity>
-                    ))}
+                    ))
+                    }
+
                 </View>
+                <TextInput style={styles.ratingInput} placeholder="Enter your rating" keyboardType="numeric" />
+
                 <Text style={styles.productProducer}>Produced by: {producer}</Text>
                 <Text style={styles.productViewCount}>Views: {view_count}</Text>
-            <View style={styles.buttonContainer}>
-                <TouchableOpacity style={styles.button} onPress={handlecart}>
+                {/* <TouchableOpacity style={styles.button} onPress={handlecart}>
                     <Text style={styles.buttonText}>Add to Cart</Text>
-                </TouchableOpacity>
-                <SubmitButton title="Add to Cart" onPress={handlecart} />
-                <SubmitButton title="Buy now" onPress={handlePlacingOrder} />
+                </TouchableOpacity> */}
+                <View style={styles.buttonContainer}>
+
+                <SubmitButton title="Add to Cart" onPress={handlecart} style={styles.button}/>
+                <SubmitButton title="Buy now" onPress={handlePlacingOrder} style={styles.button} />
                 
             </View>
             </ScrollView>
@@ -103,6 +114,7 @@ const ProductDetail: React.FC = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        flexGrow: 1,    
         padding: 10,
         backgroundColor: '#F8F8F8',
     },
@@ -137,6 +149,14 @@ const styles = StyleSheet.create({
     productDescription: {
         fontSize: 16,
         marginBottom: 10,
+        fontFamily: 'sans-serif',
+    },
+    ratingInput: {
+        padding: 10,
+        marginBottom: 10,
+        borderWidth: 1,
+        borderColor: '#ddd',
+        borderRadius: 5,
     },
     ratingContainer: {
         flexDirection: 'row',
@@ -144,6 +164,7 @@ const styles = StyleSheet.create({
     },
     productRating: {
         marginRight: 5,
+        fontSize: 10,
     },
     productProducer: {
         fontSize: 16,
@@ -159,12 +180,16 @@ const styles = StyleSheet.create({
         padding: 10,
         borderTopWidth: 1,
         borderColor: '#ddd',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
     },
     button: {
         backgroundColor: '#FE4040',
         padding: 15,
         borderRadius: 10,
         alignItems: 'center',
+        justifyContent: 'center',
+        width: '48%',
     },
     buttonText: {
         fontSize: 16,

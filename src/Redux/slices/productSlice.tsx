@@ -3,7 +3,8 @@ import axios from 'axios';
 import { RootState } from "../store";
 import axiosInstance from "../../Screens/mislenous/axiosInstance";
 
- export interface ProductState { 
+ export interface ProductState {
+    filter(arg0: (p: any) => boolean): ArrayLike<any> | null | undefined; 
     products:Product[];
     productDetails:any | null;
     loading:boolean;
@@ -11,8 +12,8 @@ import axiosInstance from "../../Screens/mislenous/axiosInstance";
 }
 
 interface Product{
-    id: number;
-    name: string;
+    id: number;                                                                    
+    name: string;                                                                       
     cost: number;
     product_images: string;
     rating: number;
@@ -31,7 +32,7 @@ export const fetchProducts = createAsyncThunk(
     async ({categoryId,limit=10,page=1}:{categoryId:string;limit:number;page:number}, {rejectWithValue}) =>{
         try{
             const response = await axiosInstance.get('/products/getList', {
-                params: {
+                params: {                                                   
                     product_category_id: categoryId,
                     limit,
                     page,
@@ -40,9 +41,8 @@ export const fetchProducts = createAsyncThunk(
             // console.log(response.data);
             // console.log("response.data.data",response.data.data);
             console.log("Api fetched all response as intended");
-            return response.data.data;
-           
-        }catch(error:any){
+            return response.data.data;   
+        } catch(error:any){
             return rejectWithValue(error.response?.data?.message || 'Failed to fetch products');
         }
     }
@@ -167,11 +167,10 @@ export default productSlice.reducer;
 
 // export default productSlice.reducer;
 
-
+// export const selectProducts = (state:RootState)=>state.products;                                                                                
 // : {
 //   fetchProductsRequest: () => void;
 //   fetchProductsSuccess: (payload: []) => void;
 //   fetchProductsFailure: (payload: string) => void;
 // } = productslice.actions;
-
 //check slice keyword

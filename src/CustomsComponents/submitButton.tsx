@@ -37,8 +37,6 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 15,
-    alignItems: 'center',
-    justifyContent: 'center',
     width: 100, // Ensure consistent width
     height: 50, // Ensure consistent height
   },
@@ -53,7 +51,6 @@ const styles = StyleSheet.create({
     height: '100%',
     borderRadius: 5, 
     alignItems: 'center',
-    justifyContent: 'center',
   },
 });
 
