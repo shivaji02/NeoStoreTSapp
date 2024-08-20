@@ -10,7 +10,7 @@ import { registerUser } from '../../Redux/slices/authSlice';
 import SubmitButton from '../../CustomsComponents/submitButton';
 import { AppDispatch } from '../../Redux/store';
 import Toast from 'react-native-toast-message';
-
+import HeadBack from '../../CustomsComponents/BackWithTitle';
 const validationSchema = Yup.object().shape({
   first_name: Yup.string()
     .matches(/^[a-zA-Z]+$/, "Only characters are allowed")
@@ -120,14 +120,14 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
               formData.append('confirm_password', values.confirm_password);
               formData.append('gender', values.gender);
               formData.append('phone_no', values.phone_no);
-
-              await dispatch(registerUser(formData)).unwrap();
+              console.log('Form Data in comp:', formData);
+             dispatch(registerUser(formData)).unwrap();
               handleToast('success', 'Registration successful');
-              navigation.goBack(); // Navigate back on successful registration
+              navigation.navigate('Login');
             } catch (error: any) {
               if (error.response) {
                 console.error('Error response status:', error.response.status);
-                handleToast('error', error); // Show toast with the error message
+                handleToast('error please check code', error); // Show toast with the error message
               } else if (error.request) {
                 console.error('Error request:', error.request);
                 Alert.alert('Error', 'No response received from server');
@@ -135,8 +135,9 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
                 console.error('Error message:', error.message);
                 Alert.alert('Error', error.message);
               }
-              throw error;
+              
             }
+
           }}
         >
           {({ handleChange, handleBlur, handleSubmit, setFieldValue, values, errors, touched }) => (
@@ -194,15 +195,15 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
 
               <View style={styles.radioContainer}>
                 <RadioButton
-                  value="male"
-                  status={values.gender === 'male' ? 'checked' : 'unchecked'}
-                  onPress={() => setFieldValue('gender', 'male')}
+                  value="M"
+                  status={values.gender === 'M' ? 'checked' : 'unchecked'}
+                  onPress={() => setFieldValue('gender', 'M')}
                 />
                 <Text style={styles.radioText}>Male</Text>
                 <RadioButton
-                  value="female"
-                  status={values.gender === 'female' ? 'checked' : 'unchecked'}
-                  onPress={() => setFieldValue('gender', 'female')}
+                  value="F"
+                  status={values.gender === 'F' ? 'checked' : 'unchecked'}
+                  onPress={() => setFieldValue('gender', 'F')}
                 />
                 <Text style={styles.radioText}>Female</Text>
               </View>

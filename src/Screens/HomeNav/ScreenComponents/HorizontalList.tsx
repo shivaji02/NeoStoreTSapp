@@ -51,7 +51,7 @@ const ProductHList: React.FC = () => {
             <Text style={styles.ratingStars}>{'★'.repeat(item.rating)}</Text>
           </View>
           <Text style={styles.productName}>{item.name}</Text>
-          <Text style={styles.productPrice}>${item.cost.toFixed(2)}</Text>
+          <Text style={styles.productPrice}>₹ {item.cost.toFixed(2)}</Text>
         </View>
       </View>
     </TouchableOpacity>
@@ -59,7 +59,7 @@ const ProductHList: React.FC = () => {
 
   if (loading) {
     return 
-    <ActivityIndicator size="large" color="#000" />;
+    <ActivityIndicator size="large" color="green" />;
   }
 
   if (error) {

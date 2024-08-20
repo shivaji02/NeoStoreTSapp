@@ -6,7 +6,7 @@ type Address = {
   street: string;
   city: string;
   state: string;
-  zip: string;
+  pincode: string;
   isDefault: boolean;
 };
 

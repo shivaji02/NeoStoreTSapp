@@ -18,7 +18,7 @@ const Header: React.FC<HeaderProps> = ({ title = 'NeoStore', onDrawerPress, onCa
   const accessToken = AsyncStorage.getItem('access_token');
   const cartItemCount = useSelector(selectCartItemCount);  // Get cart item count from Redux
 
-console.log('access token--',accessToken);
+// console.log('access token--',accessToken);
   return (
      <View style={styles.headerContainer}>
       <View style={styles.Drawicon}>

@@ -32,8 +32,8 @@ export interface RootState {
 
 const LogInScreen = ({ navigation }: LogInScreenNavigationProp) => {
   const [formData, setFormData] = useState({
-    email: '',
-    password: '',
+    email: 'mail@mail.com',
+    password: 'Abcd@1234',
   });
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const dispatch = useDispatch();
@@ -51,38 +51,62 @@ const LogInScreen = ({ navigation }: LogInScreenNavigationProp) => {
     const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email);
     setIsButtonDisabled(!isFormValid || !isEmailValid);
   }, [formData]);
+  
+// const handleLogin = async () => {
+//     try {
+//       const resultAction = await dispatch(loginUser(formData)).unwrap();
+//       console.log('resultAction:', resultAction.payload);
+//       navigation.navigate('HomeNavsScreen');
+//       Toast.show({
+//         type: 'success',
+//         text1: 'Login Successful',
+//         text2: 'Welcome back!',
+//       });
+//     } catch (error: any) {
+//       // Handle the error
+//       const errorMessage = error.message || 'Failed to login';
+//       Toast.show({
+//         type: 'error',
+//         text1: 'Login Error',
+//         text2: errorMessage,
+//       });
+//       // console.error('Error in handleLogin:', error);
+//       Alert.alert('Error', errorMessage);
+//     }
+//   };
+    
+const handleLogin = async () => {
+  try {
+    // Dispatch the loginUser thunk and unwrap the result
+    const resultAction = await dispatch(loginUser(formData)).unwrap();
+    console.log('resultAction:', resultAction.accessToken); // Adjusted to accessToken
 
-  const handleLogin = async () => {
-    if (!formData.email || !formData.password) {
-      Alert.alert('Validation Error', 'Please fill in both email and password.');
-      return;
+    // After successful login, initialize authentication
+    const initializeAuthResult = await dispatch(initializeAuth()).unwrap();
+    
+    if (initializeAuthResult?.accessToken) {
+      // Navigate to the Home screen if the token is valid
+      navigation.navigate('HomeNavsScreen');
+      Toast.show({
+        type: 'success',
+        text1: 'Login Successful',
+        text2: 'Welcome back!',
+      });
+    } else {
+      // Handle cases where token validation fails
+      throw new Error('Failed to validate login. Please try again.');
     }
+  } catch (error: any) {
+    const errorMessage = error.message || 'Failed to login';
+    Toast.show({
+      type: 'error',
+      text1: 'Login Error',
+      text2: errorMessage,
+    });
+    Alert.alert('Error', errorMessage);
+  }
+};
 
-    try {
-      const resultAction = await dispatch(loginUser({ formData }) as any);
-
-      if (loginUser.fulfilled.match(resultAction)) {
-        navigation.navigate('HomeNavsScreen');
-        Toast.show({
-          type: 'success',
-          text1: 'Login Successful',
-          text2: 'Welcome back!',
-          position: 'bottom',
-        });
-      } else {
-        const errorMessage = resultAction.payload || 'Failed to login';
-        Toast.show({
-          type: 'error',
-          text1: 'Login Error',
-          text2: errorMessage,
-          position: 'top',
-        });
-      }
-    } catch (error: any) {
-      const errorMessage = error.response?.data?.message || 'Something went wrong';
-      Alert.alert('Error', errorMessage);
-    }
-  };
 
 
   return (
@@ -128,7 +152,6 @@ const LogInScreen = ({ navigation }: LogInScreenNavigationProp) => {
             Forgot password?
           </Text>
         </View>
-        {!loading && <ActivityIndicator animating={true} color="red" />}
 
         <CustomButton text="Sign In" onPress={handleLogin} disabled={isButtonDisabled || loading} />
 

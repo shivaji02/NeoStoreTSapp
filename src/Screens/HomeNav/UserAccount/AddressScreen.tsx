@@ -3,7 +3,7 @@ import { View, TextInput, Button, Text, FlatList, TouchableOpacity, StyleSheet, 
 import { useDispatch, useSelector } from 'react-redux';
 import { addAddress, selectAddress, deleteAddress } from '../../../Redux/slices/addressSlice'; // Adjust the import path
 import HeadBack from '../../../CustomsComponents/BackWithTitle';
-import { Swipeable } from 'react-native-gesture-handler';
+// import { Swipeable } from 'react-native-gesture-handler';
 
 const AddressScreen = ({ navigation }) => {
   const [name, setName] = useState('');

@@ -12,17 +12,25 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath("com.android.tools.build:gradle")
-        classpath("com.facebook.react:react-native-gradle-plugin")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin")
+        // Upgrade Android Gradle Plugin
+        classpath("com.android.tools.build:gradle:8.1.1")
+        // Specify the version of React Native Gradle Plugin
+        classpath("com.facebook.react:react-native-gradle-plugin:0.72.0")
+        // Ensure Kotlin plugin version aligns with AGP
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
+    }
+}
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(20))
     }
 }
 configurations.all {
     resolutionStrategy {
         force 'com.github.your-dependency:version'
         force 'com.reactnativecommunity:masked-view:0.1.10'
-
     }
 }
 
-apply plugin: "com.facebook.react.rootproject"
+// Apply the React Native plugin correctly
+apply plugin: "com.facebook.react"

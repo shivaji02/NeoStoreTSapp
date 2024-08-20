@@ -6,50 +6,42 @@ import { placeOrder } from '../../Redux/slices/orderSlice';
 import { selectCartItems } from '../../Redux/slices/cartSlice';
 import { useNavigation } from '@react-navigation/native';
 import HeadBack from '../../CustomsComponents/BackWithTitle';
+import SubmitButton from '../../CustomsComponents/submitButton';
+
 const OrderScreen: React.FC = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
-  const cartItems = useSelector(selectCartItems);
-  const [selectedAddress, setSelectedAddress] = useState<string | null>(null);
-  const [newAddress, setNewAddress] = useState<string>('');
-  const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const cartItems = useSelector(selectCartItems); // Use the cart items for placing an order
+  const [address, setAddress] = useState<string>(''); // Address input
+  const [modalVisible, setModalVisible] = useState<boolean>(false); // Modal visibility
 
-  // Dummy addresses for demonstration, you should fetch these from your backend or user profile.
-  const addresses = useSelector((state: RootState) => state.user.addresses);
-
+  // Calculate the total value of the cart items
   const calculateTotalValue = () => {
     return cartItems.reduce((total, item) => total + item.product.cost * item.quantity, 0).toFixed(2);
   };
+
+  // Dispatch the placeOrder thunk with the entered address
   const handlePlaceOrder = async () => {
-    if (!selectedAddress) {
-      Alert.alert('No Address Selected', 'Please select an address before placing the order.');
+    if (!address) {
+      Alert.alert('No Address Provided', 'Please enter an address before placing the order.');
       return;
+      // setModalVisible(false)
     }
-  
+
     const orderPayload = {
-      addressId: selectedAddress.id,
-      items: productDetails.map(item => ({
-        productId: item.product.id,
-        quantity: item.quantity,
-      })),
+      address,
     };
-  
+
     try {
-      await dispatch(placeOrder(orderPayload));
-      const total = productDetails.reduce((acc, item) => acc + item.product.cost * item.quantity, 0);
-      navigation.navigate('OrderConfirmation', { address: selectedAddress, orderItems: productDetails, total });
+      await dispatch(placeOrder(orderPayload)); // Dispatch the order
+      const total = calculateTotalValue();
+      navigation.navigate('OrderConfirmationScreen', { address, orderItems: cartItems, total }); // Navigate to confirmation screen
     } catch (error) {
       Alert.alert('Order Failed', 'There was an issue placing your order. Please try again.');
     }
   };
-  
-  const handleAddAddress = () => {
-    if (newAddress) {
-      setSelectedAddress(newAddress);
-      setModalVisible(false);
-    }
-  };
 
+  // Render the cart items
   const renderCartItem = ({ item }: { item: any }) => (
     <View style={styles.cartItemContainer}>
       <Text style={styles.productName}>{item.product.name}</Text>
@@ -57,12 +49,11 @@ const OrderScreen: React.FC = () => {
         ${item.product.cost.toFixed(2)} x {item.quantity} = ${(item.product.cost * item.quantity).toFixed(2)}
       </Text>
     </View>
-  );
+  ); 
 
   return (
     <View style={styles.container}>
-<HeadBack title="Review Your Order" showIcon={false} />
-      {/* <Text style={styles.header}>Review Your Order</Text> */}
+      <HeadBack title="Review Your Order" showIcon={false} />
       <FlatList
         data={cartItems}
         renderItem={renderCartItem}
@@ -74,53 +65,27 @@ const OrderScreen: React.FC = () => {
         )}
       />
 
-      <View style={styles.addressContainer}>
-        <Text style={styles.addressLabel}>Select Address:</Text>
-        <TouchableOpacity
-          style={styles.selectAddressButton}
-          onPress={() => setModalVisible(true)}
-        >
-          <Text style={styles.selectAddressButtonText}>
-            {selectedAddress || 'Select or Add New Address'}
-          </Text>
-        </TouchableOpacity>
-      </View>
-
-      <TouchableOpacity style={styles.placeOrderButton} onPress={handlePlaceOrder}>
+      {/* Button to open modal for entering address */}
+      <TouchableOpacity style={styles.placeOrderButton} onPress={() => setModalVisible(true)}>
         <Text style={styles.placeOrderButtonText}>Place Order</Text>
       </TouchableOpacity>
 
+      {/* Address input modal */}
       <Modal visible={modalVisible} transparent={true} animationType="slide">
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalHeader}>Select or Add Address</Text>
-            <FlatList
-              data={addresses}
-              renderItem={({ item }) => (
-                <TouchableOpacity
-                  style={styles.addressOption}
-                  onPress={() => {
-                    setSelectedAddress(item);
-                    setModalVisible(false);
-                  }}
-                >
-                  <Text>{item}</Text>
-                </TouchableOpacity>
-              )}
-              keyExtractor={(item, index) => index.toString()}
-            />
+            <Text style={styles.modalHeader}>Enter Your Address</Text>
             <TextInput
-              placeholder="Add New Address"
+              placeholder="Enter Address"
               style={styles.addressInput}
-              value={newAddress}
-              onChangeText={setNewAddress}
+              value={address}
+              onChangeText={setAddress}
             />
-            <TouchableOpacity style={styles.addAddressButton} onPress={handleAddAddress}>
-              <Text style={styles.addAddressButtonText}>Add Address</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.closeModalButton} onPress={() => setModalVisible(false)}>
-              <Text style={styles.closeModalButtonText}>Close</Text>
-            </TouchableOpacity>
+
+            <View style={styles.modalbuttonContainer}>
+              <SubmitButton title="Confirm Address" onPress={handlePlaceOrder} style={styles.ConfirmmodalButton} />
+              <SubmitButton title="Close" onPress={() => setModalVisible(false)} style={styles.ClosemodalButton} />
+            </View>
           </View>
         </View>
       </Modal>
@@ -133,11 +98,6 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
     backgroundColor: '#f8f8f8',
-  },
-  header: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 16,
   },
   cartItemContainer: {
     padding: 8,
@@ -157,22 +117,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'right',
     marginVertical: 16,
-  },
-  addressContainer: {
-    marginVertical: 16,
-  },
-  addressLabel: {
-    fontSize: 16,
-    marginBottom: 8,
-  },
-  selectAddressButton: {
-    padding: 12,
-    backgroundColor: '#eee',
-    borderRadius: 8,
-    alignItems: 'center',
-  },
-  selectAddressButtonText: {
-    fontSize: 16,
   },
   placeOrderButton: {
     backgroundColor: '#28a745',
@@ -197,15 +141,29 @@ const styles = StyleSheet.create({
     padding: 16,
     borderRadius: 8,
   },
+  modalbuttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  ClosemodalButton: {
+    backgroundColor: 'tomato',
+    padding: 16,
+    borderRadius: 8,
+    alignItems: 'center',
+    width: '40%',
+  },
+  ConfirmmodalButton: {
+    backgroundColor: '#28a745',
+    padding: 4,
+    borderRadius: 8,
+    alignItems: 'center',
+    width: '60%',
+    justifyContent: 'center'
+  },
   modalHeader: {
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 16,
-  },
-  addressOption: {
-    padding: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
   },
   addressInput: {
     borderWidth: 1,
@@ -214,19 +172,9 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginBottom: 16,
   },
-  addAddressButton: {
-    backgroundColor: '#28a745',
-    padding: 12,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginBottom: 16,
-  },
-  addAddressButtonText: {
-    fontSize: 16,
-    color: '#fff',
-  },
   closeModalButton: {
     alignItems: 'center',
+    marginTop: 16,
   },
   closeModalButtonText: {
     fontSize: 16,

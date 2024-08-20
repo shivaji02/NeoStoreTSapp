@@ -17,13 +17,17 @@ const initialState:OrderState ={
     error:null,
 };      
 
+
 //place an order
 
 export const placeOrder = createAsyncThunk(
     'order/placeOrder',
     async ({address}:{address:string},{rejectWithValue,getState}) => {
         const state:RootState =getState();
-        const accessToken = state.auth.user?.access_token;
+        // const accessToken = state.auth.user?.access_token;
+        const accessToken = state.auth.access_token;  // Accessing the token from auth state
+
+        console.log("accessToken from orderSLice",accessToken);
         if(!accessToken){
             console.log("User not logged in//placeOrder and accestoken is not available");
             return rejectWithValue('User not logged in');
@@ -39,7 +43,8 @@ export const placeOrder = createAsyncThunk(
                     },
                 }
             );
-            return response.data;
+            console.log("Order placed successfully//placeOrder debug from place order api");
+            return response.data; 
         }
         catch (error:any){
             console.log("Failed to place order//placeOrder debug from place order api");
@@ -53,10 +58,10 @@ export const fetchOrderList = createAsyncThunk(
     "order/fetachOrderList",
     async (_, { rejectWithValue, getState }) => {
         const state:RootState = getState();
-        const accessToken = state.auth.user?.access_token;
+        const accessToken = state.auth.access_token;  // Accessing the token from auth state
 
         if(!accessToken){
-            console.log("User not logged in//fetchOrderList and accestoken is not available");
+            console.log("User not logged in//fetchOrderList's  accestoken is not available");
             return isRejectedWithValue('User not logged in');
         }
         try{
@@ -79,11 +84,14 @@ export const fetchOrderList = createAsyncThunk(
 export const fetchOrderDetail  = createAsyncThunk(
     'order/fetchOrderDetail',
     async ({order_id}:{order_id:number},{rejectWithValue,getState}) => {
+        console.log('order_id inn orderslice after dispatch........>>>',order_id)
          const state:RootState =getState();
-         const accessToken = state.auth.user?.access_token;
+         const accessToken = state.auth.access_token;
+         console.log("fetchOrderDetail order_id debug from orderDetail api.....>>>>",order_id),
 
+console.log("accessToken from orderDetailSLice",accessToken);
             if(!accessToken){
-                console.log("User not logged in//fetchOrderDetail and accestoken is not available");
+                console.log("User not logged in//fetchOrderDetail's  accestoken is not available");
                 return rejectWithValue('User not logged in');
             }
 
@@ -97,7 +105,7 @@ export const fetchOrderDetail  = createAsyncThunk(
                         order_id,
                     },
                 });
-                console.log("Order details fetched successfully//fetchOrderDetail debug from orderDetail api");
+                console.log("Order details fetched successfully >>IT IS WORKING<<");
                 return response.data.data;
 
             }
@@ -139,6 +147,19 @@ const orderSlice = createSlice({
             state.loading = false;
             state.error=payload as string;
         });
+        builder.addCase(fetchOrderDetail.pending, (state) => {
+            state.loading = true;
+            state.error = null;
+          });
+          builder.addCase(fetchOrderDetail.fulfilled, (state, { payload }) => {
+            state.loading = false;
+            state.orderDetail = payload;
+          });
+          builder.addCase(fetchOrderDetail.rejected, (state, { payload }) => {
+            state.loading = false;
+            state.error = payload as string;
+          });
+      
     }
 });
 

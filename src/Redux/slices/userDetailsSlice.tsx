@@ -22,10 +22,10 @@ export const fetchUserDetails = createAsyncThunk(
     try {
       const state = getState() as RootState;
       const accessToken = state.auth.access_token;
-     console.log(accessToken,"savedToken in userSlice");
+     console.log(accessToken,"savedToken in userSlice for fetchUserDetails");
 
 if (!accessToken) {
-    console.log("Access token is missing");
+    console.log("Access token is missing fetch userdetails");
     throw new Error('Access token is missing');
 }
 
@@ -34,12 +34,12 @@ if (!accessToken) {
             access_token: `${accessToken}`,
         },
       });
-      console.log(response.data.data.user_data,"response.data.user_data");
+      // console.log(response.data.data.user_data,"response.data.user_data");
       
       return response.data.data.user_data;
 
     } catch (error: any) {
-        console.log(error);
+        // console.log(error);
         console.log(`Failed to fetch user details ${error.response?.data?.message}`);
       return rejectWithValue(error.response?.data?.message || 'Failed to fetch user details');
     }

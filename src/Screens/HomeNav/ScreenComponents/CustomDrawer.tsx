@@ -87,7 +87,9 @@ const dispatch = useDispatch();
         <TouchableOpacity onPress={()=>navigation.navigate('AddressScreen')}>
           <Text style ={styles.drawerItem} >Manage your Address</Text>
         </TouchableOpacity>
-
+<TouchableOpacity onPress={()=>navigation.navigate('OrderList')}>
+          <Text style ={styles.drawerItem} >Order History</Text>
+        </TouchableOpacity>
         <TouchableOpacity onPress={()=>navigation.navigate('UpdateDetails')}>
           <Text style ={styles.drawerItem} >Update Details</Text>
         </TouchableOpacity>

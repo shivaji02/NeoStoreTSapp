@@ -8,10 +8,12 @@ import changePassword from './UserAccount/ChangePassword';
 import ProductList from '../Product/ProductList';
 import ProductDetail from '../Product/ProductDetail';
 import CartList from '../Cart/CartList';
-import OrderScreen from '../Order/Orderscreen';
+import OrderScreen from '../Order/OrderScreen';
 import OrderConfirmationScreen from '../Order/OderConfirmationScreen';
 import AddressScreen from './UserAccount/AddressScreen';
-import AddressConfirmation from '../Order/AddressConfirmation';
+import OrderList from '../Order/OrderList';
+ import OrderDetail from '../Order/OrderDetail';
+// import AddressConfirmation from '../Order/AddressConfirmation';
 
 const Stack = createStackNavigator();
 
@@ -29,7 +31,8 @@ const HomeMainNav: React.FC = () => {
         <Stack.Screen options={{headerShown:false}} name ="AddressScreen" component ={AddressScreen}/>
         <Stack.Screen options={{headerShown:false}} name ="OrderScreen" component ={OrderScreen}/>
         <Stack.Screen options={{headerShown:false}} name ="OrderConfirmationScreen" component ={OrderConfirmationScreen}/>
-        <Stack.Screen options={{headerShown:false}} name ="AddressConfirmation" component ={AddressConfirmation}/>
+        <Stack.Screen options={{headerShown:false}} name ="OrderList" component ={OrderList}/>
+        <Stack.Screen options={{headerShown:false}} name ="OrderDetail" component ={OrderDetail}/>
         </Stack.Navigator>
   );
 };

@@ -77,24 +77,20 @@ export const removeFromCart = createAsyncThunk(
     if (!accessToken) {
       return rejectWithValue('User not logged in');
     }
+
     try {
-      const response = await axiosInstance.post(
+      await axiosInstance.post(
         '/deleteCart',
-        {
-          product_id: productId,
-        },
-        {
-          headers: {
-            access_token: accessToken,
-          },
-        }
+        { product_id: productId },
+        { headers: { access_token: accessToken } }
       );
-      return response.data;
+      return productId; // Return the productId that was removed
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || 'Failed to remove from cart');
     }
   }
 );
+
 
 // Async thunk for listing cart items
 export const listCartItems = createAsyncThunk(
@@ -177,11 +173,13 @@ const cartSlice = createSlice({
       state.loading = true;
       state.error = null;
     });
-    builder.addCase(removeFromCart.fulfilled, (state, action: PayloadAction<CartItem>) => {
+    builder.addCase(removeFromCart.fulfilled, (state, action: PayloadAction<string>) => {
       state.loading = false;
-      state.cartItems = state.cartItems.filter(item => item.product_id !== action.payload.product_id);
+      state.cartItems = state.cartItems.filter(item => item.product_id !== action.payload);
+      console.log('Updated cart items:', state.cartItems);
     });
-    builder.addCase(removeFromCart.rejected, (state, action: PayloadAction<string | null>) => {
+    
+            builder.addCase(removeFromCart.rejected, (state, action: PayloadAction<string | null>) => {
       state.loading = false;
       state.error = action.payload;
     });

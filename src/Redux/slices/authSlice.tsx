@@ -1,7 +1,8 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, PayloadAction, AsyncThunkAction, ThunkDispatch, UnknownAction } from '@reduxjs/toolkit';
 import { RootState } from '../store';
-import axiosInstance from '../../Screens/mislenous/axiosInstance';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { LoginUser } from '../../Screens/LogNav/LoginScreen';
+import axiosInstance from '../../Screens/mislenous/axiosInstance';
 
 interface AuthState {
   user: any | null;
@@ -22,11 +23,11 @@ const initialState: AuthState = {
 export const initializeAuth = createAsyncThunk(
   'auth/initializeAuth',
   async (_, { dispatch }) => {
-     const accessToken = await AsyncStorage.getItem('access_token');
-//    console.log('accessToken/////initialiseAuth', accessToken); working
+    const accessToken = await AsyncStorage.getItem('access_token');
+    console.log('accessToken/////initialiseAuth', accessToken); // working
     if (accessToken) {
       dispatch(authSlice.actions.setAuth({ accessToken, isAuthenticated: true }));
-      // console.log('SavedToken @ initialiseAuth', accessToken); working
+      console.log('SavedToken @ initialiseAuth', accessToken); //working
 
       return { accessToken };
     } else {
@@ -36,16 +37,20 @@ export const initializeAuth = createAsyncThunk(
   }
 );
 
+// Call initializeAuth after login
+
 
 export const registerUser = createAsyncThunk(
   'auth/registerUser',
   async (userData: any, { rejectWithValue }) => {
-    try {
-      const response = await axiosInstance.post('users/register', userData);
-      console.log('Full Response Data in register:', JSON.stringify(response.data));
+    // console.log('userData in register:in slice', JSON.stringify(userData));
+    try { 
+      // console.log('enteering try block in register');
+      const response = await axiosInstance.post('/users/register', userData);
+      // console.log('Full Response Data in register:', JSON.stringify(response.data));
       return response.data.data;
     } catch (error: any) {
-      console.log('Error in register:', error);
+      // console.log('Error in register:', error);
       return rejectWithValue(error.response?.data?.message || 'Failed to Register');
     }
   }
@@ -53,26 +58,26 @@ export const registerUser = createAsyncThunk(
 
 export const loginUser = createAsyncThunk(
   'auth/loginUser',
-  async ({ formData }: { formData: any }, { rejectWithValue }) => {
+  async (formData: any, { rejectWithValue }) => {
+    console.log('email/password in slice:', formData);
     try {
-      const { email, password } = formData;
-      if (!email || !password) throw new Error('Please provide both email and password');
-
-      const response = await axiosInstance.post('/users/login', { email, password });
-
+      const response = await axiosInstance.post('/users/login', formData);
       const accessToken = response.data.data.access_token;
+      console.log('response in login slice:', response.data.data);
 
       if (accessToken) {
         await AsyncStorage.setItem('access_token', accessToken);
+        return { accessToken };
+      } else {
+        return rejectWithValue('Failed to login. Please check your credentials and try again.');
       }
-
-      return { accessToken };
     } catch (error: any) {
       const errorMessage = error.response?.data?.message || 'Failed to login. Please check your credentials and try again.';
       return rejectWithValue(errorMessage);
     }
   }
 );
+
 
 export const forgotPassword = createAsyncThunk(
   'auth/forPassword',
@@ -121,10 +126,11 @@ export const authSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(loginUser.fulfilled, (state, action: PayloadAction<any>) => {
+      .addCase(loginUser.fulfilled, (state, action: PayloadAction<{ accessToken: string }>) => {
         state.loading = false;
         state.access_token = action.payload.accessToken;
         state.isAuthenticated = true;
+        state.error = null;
       })
       .addCase(loginUser.rejected, (state, action: PayloadAction<string | null>) => {
         state.loading = false;
@@ -155,3 +161,6 @@ export const authSlice = createSlice({
 export const { logoutUser } = authSlice.actions;
 export const selectAuth = (state: RootState) => state.auth;
 export default authSlice.reducer;
+function dispatch(arg0: AsyncThunkAction<{ accessToken: string; } | null, void, { state?: unknown; dispatch?: ThunkDispatch<unknown, unknown, UnknownAction>; extra?: unknown; rejectValue?: unknown; serializedErrorType?: unknown; pendingMeta?: unknown; fulfilledMeta?: unknown; rejectedMeta?: unknown; }>) {
+}
+

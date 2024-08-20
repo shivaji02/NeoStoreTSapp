@@ -32,7 +32,7 @@ const ProductList: React.FC = () => {
     if (!categoryId) {
         return (
             <View style={styles.Vcontainer}>
-                <Text style={styles.title}>Products</Text>
+                <HeadBack title="Products" style={styles.title}/>
                 <Text style={styles.error}>Error in Fetching UI ID.</Text>
             </View>
         );
@@ -44,7 +44,7 @@ const ProductList: React.FC = () => {
                 <View style={styles.card}>
                     <Image source={{ uri: item.product_images }} style={styles.image} />
                     <Text style={styles.productName}>{item.name}</Text>
-                    <Text style={styles.productPrice}>Rs. {item.cost}</Text>
+                    <Text style={styles.productPrice}>₹ {item.cost}</Text>
                     <Text style={styles.productRating}>Rating: {item.rating}</Text>
                 </View>
             </TouchableOpacity>
@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
         paddingBottom: 20,
     },
     row: {
-        justifyContent: 'space-between',
+        justifyContent: 'flex-start', // Align items to the left
     },
     error: {
         fontSize: 18,
@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
     productRating: {
         fontSize: 14,
         color: '#888',
-        textAlign: 'center',
+        textAlign:'left',
     },
 });
 

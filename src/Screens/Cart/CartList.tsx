@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet, Image, Alert } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectCartItems, listCartItems, changeCartQuantity } from '../../Redux/slices/cartSlice';
+import { selectCartItems, listCartItems, changeCartQuantity, removeFromCart } from '../../Redux/slices/cartSlice';
 import { RootState } from '../../Redux/store';
 import HeadBack from '../../CustomsComponents/BackWithTitle';
 import RNPickerSelect from 'react-native-picker-select';
@@ -30,8 +30,15 @@ const CartList: React.FC = () => {
 
   const handleQuantityChange = async (productId: number, quantity: number) => {
     setSelectedQuantities(prev => ({ ...prev, [productId]: quantity }));
-    await dispatch(changeCartQuantity({ productId, quantity }));
-    dispatch(listCartItems()); // Ensure the cart items are reloaded after quantity change
+    await dispatch(changeCartQuantity({ productId: productId.toString(), quantity }));
+    dispatch(listCartItems());
+  };
+
+  const handleRemoveItem = (productId: number) => {
+    console.log('Removing product:', productId); // Debugging log
+    dispatch(removeFromCart(productId.toString())).then(() => {
+      dispatch(listCartItems());
+    });
   };
 
   const calculateTotalValue = () => {
@@ -44,9 +51,7 @@ const CartList: React.FC = () => {
   };
 
   const handlePlaceOrder = () => {
-    console.log('Order Placed:', cartItems);
-    // Alert.alert('Order Placed', 'Your order has been placed successfully!');
-    navigation.navigate('OrderScreen'); // Replace 'OrderScreen' with the correct screen name
+    navigation.navigate('OrderScreen');
   };
 
   const renderCartItem = ({ item }: { item: any }) => {
@@ -66,7 +71,7 @@ const CartList: React.FC = () => {
         <View style={styles.productDetails}>
           <Text style={styles.productName}>{item.product.name}</Text>
           <Text style={styles.productPrice}>
-            ${(item.product.cost * (selectedQuantities[productId] || item.quantity)).toFixed(2)}
+            ₹ {(item.product.cost * (selectedQuantities[productId] || item.quantity)).toFixed(2)}
           </Text>
           <View style={styles.pickerContainer}>
             <RNPickerSelect
@@ -80,6 +85,9 @@ const CartList: React.FC = () => {
             />
           </View>
         </View>
+        <TouchableOpacity onPress={() => handleRemoveItem(productId)} style={styles.deleteIconContainer}>
+          <Image source={require('../../Assets.xcassets/Images/deleteIcon.png')} style={styles.deleteIcon} />
+        </TouchableOpacity>
       </View>
     );
   };
@@ -96,7 +104,7 @@ const CartList: React.FC = () => {
             renderItem={renderCartItem}
             keyExtractor={(item) => item.product?.id?.toString() || Math.random().toString()}
           />
-          <Text style={styles.totalValueText}>Total: ${calculateTotalValue()}</Text>
+          <Text style={styles.totalValueText}>Total: ₹ {calculateTotalValue()}</Text>
           <TouchableOpacity style={styles.placeOrderButton} onPress={handlePlaceOrder}>
             <Text style={styles.placeOrderButtonText}>Order Now</Text>
           </TouchableOpacity>
@@ -124,6 +132,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 10,
     elevation: 2,
+    alignItems: 'center',
   },
   productImage: {
     width: 80,
@@ -148,10 +157,9 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
   },
   quantityPickerIOS: {
-    width: 40, // Constrain to product width
+    width: 40,
     paddingVertical: 10,
     borderWidth: 1,
-    // borderColor: 'gray',
     borderRadius: 5,
     color: 'black',
     paddingRight: 30,
@@ -160,6 +168,14 @@ const styles = StyleSheet.create({
     width: 100,
     height: 50,
     color: 'black',
+  },
+  deleteIconContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  deleteIcon: {
+    width: 24,
+    height: 24,
   },
   totalValueText: {
     fontSize: 18,
