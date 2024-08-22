@@ -5,7 +5,7 @@ buildscript {
         compileSdkVersion = 34
         targetSdkVersion = 34
         ndkVersion = "26.1.10909125"
-        kotlinVersion = "1.9.22"
+        kotlinVersion = "1.9.23"
     }
     repositories {
         google()
@@ -20,17 +20,27 @@ buildscript {
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
     }
 }
+plugins {
+    id 'java'
+}
+tasks.wrapper {
+    gradleVersion = '8.9'
+}
 java {
     toolchain {
         languageVersion.set(JavaLanguageVersion.of(20))
     }
 }
+//configurations.all {
+//    resolutionStrategy {
+//        force 'com.github.your-dependency:version'
+//        force 'com.reactnativecommunity:masked-view:0.1.10'
+//    }
+//}
 configurations.all {
     resolutionStrategy {
-        force 'com.github.your-dependency:version'
         force 'com.reactnativecommunity:masked-view:0.1.10'
     }
 }
-
 // Apply the React Native plugin correctly
 apply plugin: "com.facebook.react"
