@@ -3,6 +3,7 @@ import { View, TextInput, Button, Text, FlatList, TouchableOpacity, StyleSheet, 
 import { useDispatch, useSelector } from 'react-redux';
 import { addAddress, selectAddress, deleteAddress } from '../../../Redux/slices/addressSlice'; // Adjust the import path
 import HeadBack from '../../../CustomsComponents/BackWithTitle';
+import SubmitButton from '../../../CustomsComponents/submitButton';
 // import { Swipeable } from 'react-native-gesture-handler';
 
 const AddressScreen = ({ navigation }) => {
@@ -37,8 +38,7 @@ const AddressScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <HeadBack />
-      <Text style={styles.header}>Add New Address</Text>
+      <HeadBack title='Add New Address' />
       <TextInput
         style={styles.input}
         placeholder="Name"
@@ -58,8 +58,8 @@ const AddressScreen = ({ navigation }) => {
         onChangeText={setZipCode}
         keyboardType="number-pad"
       />
-      <Button title="Save Address" onPress={handleAddAddress} />
-
+      {/* <Button title="Save Address" onPress={handleAddAddress} /> */}
+      <SubmitButton title="Save Address" onPress={handleAddAddress} style={styles.addressBTN} />
       <Text style={styles.header}>Saved Addresses</Text>
       <FlatList
         data={addressList}
@@ -76,6 +76,8 @@ const AddressScreen = ({ navigation }) => {
           </Swipeable>
         )}
       />
+          <Text>If its not working then it is work in progress</Text>
+
     </View>
   );
 };
@@ -112,6 +114,14 @@ const styles = StyleSheet.create({
   deleteButtonText: {
     color: 'white',
     fontWeight: 'bold',
+  },
+  addressBTN: {
+    // marginTop: 10,
+    backgroundColor: 'black',
+    width: 150,
+    textAlign: 'center',
+    alignSelf: 'center',
+    marginVertical: 10,
   },
 });
 

@@ -14,6 +14,7 @@ const OrderDetail: React.FC = () => {
     const navigation = useNavigation();
 
     // Fetch order detail on component mount
+    
     useEffect(() => {
         dispatch(fetchOrderDetail({ order_id: orderId }));
     }, [dispatch, orderId]);
@@ -65,7 +66,7 @@ const OrderDetail: React.FC = () => {
                         <Image source={{ uri: item.prod_image }} style={styles.productImage} />
                         <View style={styles.productDetails}>
                             <Text style={styles.productName}>{item.prod_name}</Text>
-                            <Text style={styles.productCategory}>{item.prod_cat_name}</Text>
+                            <Text style={styles.productCategory}>Category : {item.prod_cat_name}</Text>
                             <Text style={styles.productQuantity}>Quantity: {item.quantity}</Text>
                             <Text style={styles.productTotal}>Total: ₹ {item.total.toFixed(0)}</Text>
                         </View>
@@ -121,6 +122,7 @@ const styles = StyleSheet.create({
     },
     productDetails: {
         flex: 1,
+        marginLeft: 15,
     },
     productName: {
         fontSize: 16,
@@ -142,6 +144,9 @@ const styles = StyleSheet.create({
     homeButton: {
         marginTop: 20,
         backgroundColor: "#28a745",
+        width: "55%",
+        alignSelf: "center",
+        height: 40,
     },
 });
 

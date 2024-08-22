@@ -57,8 +57,8 @@ const OrderScreen: React.FC = () => {
       <FlatList
         data={cartItems}
         renderItem={renderCartItem}
-        keyExtractor={(item) => item.product.id.toString()}
-        ListFooterComponent={() => (
+        keyExtractor={(item) => item.id.toString()}
+                ListFooterComponent={() => (
           <View>
             <Text style={styles.totalValueText}>Total: ${calculateTotalValue()}</Text>
           </View>

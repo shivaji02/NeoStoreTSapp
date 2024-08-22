@@ -11,12 +11,13 @@ const { width } = Dimensions.get('window');
 const CustomDrawer: React.FC<{ isVisible: boolean; onClose: () => void }> = ({ isVisible, onClose }) => {
   const animation = useRef(new Animated.Value(-width)).current;
   const navigation = useNavigation();
-const dispatch = useDispatch();
+  const dispatch = useDispatch();
+
   // Animate the drawer in or out based on isVisible prop
   React.useEffect(() => {
     Animated.timing(animation, {
       toValue: isVisible ? 0 : -width,
-      duration: 300,
+      duration: 200,
       useNativeDriver: true,
     }).start();
   }, [isVisible]);
@@ -78,10 +79,11 @@ const dispatch = useDispatch();
       <TouchableOpacity onPress={() => navigation.navigate('UserDetails')}>
       <Text style={styles.drawerItem}>My Account</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('Cart')}>
+        <TouchableOpacity onPress={() => navigation.navigate('CartList')}>
           <Text style={styles.drawerItem}>Cart</Text>
+
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('Notifications')}>
+        <TouchableOpacity onPress={() => navigation.navigate('Notification')}>
           <Text style={styles.drawerItem}>Notifications</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={()=>navigation.navigate('AddressScreen')}>

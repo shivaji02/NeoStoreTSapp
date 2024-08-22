@@ -13,6 +13,7 @@ import OrderConfirmationScreen from '../Order/OderConfirmationScreen';
 import AddressScreen from './UserAccount/AddressScreen';
 import OrderList from '../Order/OrderList';
  import OrderDetail from '../Order/OrderDetail';
+ import Notification from './UserAccount/Notification';
 // import AddressConfirmation from '../Order/AddressConfirmation';
 
 const Stack = createStackNavigator();
@@ -33,6 +34,7 @@ const HomeMainNav: React.FC = () => {
         <Stack.Screen options={{headerShown:false}} name ="OrderConfirmationScreen" component ={OrderConfirmationScreen}/>
         <Stack.Screen options={{headerShown:false}} name ="OrderList" component ={OrderList}/>
         <Stack.Screen options={{headerShown:false}} name ="OrderDetail" component ={OrderDetail}/>
+        <Stack.Screen options={{headerShown:false}} name ="Notification" component ={Notification}/>
         </Stack.Navigator>
   );
 };

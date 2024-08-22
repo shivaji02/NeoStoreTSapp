@@ -50,13 +50,21 @@ if (!accessToken) {
 export const updateUser = createAsyncThunk(
   'user/updateUser',
   async (userData: any, { getState, rejectWithValue }) => {
+
     try {
       const state = getState() as RootState;
       const accessToken = state.auth.access_token;
+     console.log(accessToken,"savedToken in userSlice for UpdateDetails");
+     console.log("updateUser from updateSlice",userData)
 
-      const response = await axiosInstance.put('user/updateUserData', userData, {
+if (!accessToken) {
+    console.log("Access token is missing fetch updatedetails");
+    throw new Error('Access token is missing');
+}
+
+      const response = await axiosInstance.post('users/update', userData, {
         headers: {
-          Authorization: `Bearer ${accessToken}`,
+          access_token: `${accessToken}`,
         },
       });
       console.log("reponse details", response.data)

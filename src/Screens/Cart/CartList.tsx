@@ -58,7 +58,7 @@ const CartList: React.FC = () => {
     if (!item || !item.product) {
       return (
         <View style={styles.cartItemContainer}>
-          <Text style={styles.emptyCartText}>Product details not available.</Text>
+          <Text style={styles.emptyCartText}>Product details not available come again.</Text>
         </View>
       );
     }
@@ -120,7 +120,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: '#f8f8f8',
+    // backgroundColor: '#f8f8f8',
+    backgroundColor: 'rgba(255, 171, 0, 0.64)',
+
   },
   cartItemContainer: {
     flexDirection: 'row',
@@ -200,6 +202,8 @@ const styles = StyleSheet.create({
     color: '#888',
     textAlign: 'center',
     marginTop: 32,
+        // backgroundColor: 'rgba(255, 171, 0, 0.64)',
+
   },
 });
 

@@ -1,12 +1,10 @@
-import { View, StyleSheet, Text, TextInput, Alert, Image } from 'react-native';
 import React, { useState, useEffect } from 'react';
-import { LogInScreenNavigationProp } from '../mislenous/RootstackParam';
+import { View, StyleSheet, Text, TextInput, Alert, Image, TouchableOpacity } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginUser, initializeAuth } from '../../Redux/slices/authSlice';
-import { ActivityIndicator } from 'react-native-paper';
 import CustomButton from '../../CustomsComponents/customButton';
 import Toast from 'react-native-toast-message';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import RegisterScreen from './RegisterUserScreen';
 
 export interface LoginUser {
   email: string;
@@ -30,15 +28,18 @@ export interface RootState {
   };
 }
 
-const LogInScreen = ({ navigation }: LogInScreenNavigationProp) => {
+const LogInScreen = ({ navigation }) => {
   const [formData, setFormData] = useState({
-    email: 'mail@mail.com',
-    password: 'Abcd@1234',
+    email: '',
+    password: '',
   });
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [isEmailFocused, setIsEmailFocused] = useState(false);
+  const [isPasswordFocused, setIsPasswordFocused] = useState(false);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
-  const dispatch = useDispatch();
-  const { loading, isAuthenticated,error } = useSelector((state: RootState) => state.auth);
 
+  const dispatch = useDispatch();
+  const { loading, isAuthenticated } = useSelector((state: RootState) => state.auth);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -51,63 +52,32 @@ const LogInScreen = ({ navigation }: LogInScreenNavigationProp) => {
     const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email);
     setIsButtonDisabled(!isFormValid || !isEmailValid);
   }, [formData]);
-  
-// const handleLogin = async () => {
-//     try {
-//       const resultAction = await dispatch(loginUser(formData)).unwrap();
-//       console.log('resultAction:', resultAction.payload);
-//       navigation.navigate('HomeNavsScreen');
-//       Toast.show({
-//         type: 'success',
-//         text1: 'Login Successful',
-//         text2: 'Welcome back!',
-//       });
-//     } catch (error: any) {
-//       // Handle the error
-//       const errorMessage = error.message || 'Failed to login';
-//       Toast.show({
-//         type: 'error',
-//         text1: 'Login Error',
-//         text2: errorMessage,
-//       });
-//       // console.error('Error in handleLogin:', error);
-//       Alert.alert('Error', errorMessage);
-//     }
-//   };
-    
-const handleLogin = async () => {
-  try {
-    // Dispatch the loginUser thunk and unwrap the result
-    const resultAction = await dispatch(loginUser(formData)).unwrap();
-    console.log('resultAction:', resultAction.accessToken); // Adjusted to accessToken
 
-    // After successful login, initialize authentication
-    const initializeAuthResult = await dispatch(initializeAuth()).unwrap();
-    
-    if (initializeAuthResult?.accessToken) {
-      // Navigate to the Home screen if the token is valid
-      navigation.navigate('HomeNavsScreen');
+  const handleLogin = async () => {
+    try {
+      const resultAction = await dispatch(loginUser(formData)).unwrap();
+      const initializeAuthResult = await dispatch(initializeAuth()).unwrap();
+
+      if (initializeAuthResult?.accessToken) {
+        navigation.navigate('HomeNavsScreen');
+        Toast.show({
+          type: 'success',
+          text1: 'Login Successful',
+          text2: 'Welcome back!',
+        });
+      } else {
+        throw new Error('Failed to validate login. Please try again.');
+      }
+    } catch (error: any) {
+      const errorMessage = error.message || 'Failed to login';
       Toast.show({
-        type: 'success',
-        text1: 'Login Successful',
-        text2: 'Welcome back!',
+        type: 'error',
+        text1: 'Login Error',
+        text2: errorMessage,
       });
-    } else {
-      // Handle cases where token validation fails
-      throw new Error('Failed to validate login. Please try again.');
+      // Alert.alert('Error', errorMessage);
     }
-  } catch (error: any) {
-    const errorMessage = error.message || 'Failed to login';
-    Toast.show({
-      type: 'error',
-      text1: 'Login Error',
-      text2: errorMessage,
-    });
-    Alert.alert('Error', errorMessage);
-  }
-};
-
-
+  };
 
   return (
     <View style={styles.container}>
@@ -123,29 +93,47 @@ const handleLogin = async () => {
           Don't have an account yet?{' '} 
           <Text
             style={styles.signUpText}
-            onPress={() => navigation.navigate('RegisterUserScreen')}>
+            onPress={() => navigation.navigate('RegisterScreen')}>
             Sign Up
           </Text>
         </Text>
 
         <TextInput
           placeholder="Your username or email address"
-          style={styles.input}
+          style={[
+            styles.input,
+            { backgroundColor: isEmailFocused ? 'white' : 'gray' },
+          ]}
           value={formData.email}
           onChangeText={text => setFormData({ ...formData, email: text })}
           autoCapitalize="none"
+          onFocus={() => setIsEmailFocused(true)}
+          onBlur={() => setIsEmailFocused(false)}
         />
 
-        <TextInput
-          placeholder="Password"
-          style={styles.input}
-          value={formData.password}
-          onChangeText={text => setFormData({ ...formData, password: text })}
-          secureTextEntry
-        />
+        <View style={styles.input}>
+          <TextInput
+            placeholder="Password"
+            style={[
+              styles.Pinput,
+              { backgroundColor: isPasswordFocused ? 'white' : 'gray' },
+            ]}
+            value={formData.password}
+            onChangeText={text => setFormData({ ...formData, password: text })}
+            secureTextEntry={!isPasswordVisible}
+            autoCapitalize="none"
+            onFocus={() => setIsPasswordFocused(true)}
+            onBlur={() => setIsPasswordFocused(false)}
+          />
+          <TouchableOpacity onPress={() => setIsPasswordVisible(!isPasswordVisible)}>
+            <Image
+              source={isPasswordVisible ? require('../../Assets.xcassets/Images/visibleoff.png') : require('../../Assets.xcassets/Images/visible.png')}
+              style={{ width: 20, height: 20, marginTop: 0 }}
+            />
+          </TouchableOpacity>
+        </View>
 
         <View style={styles.rememberForgotContainer}>
-          {/* <Text style={styles.rememberMe}>Remember me</Text> */}
           <Text
             style={styles.forgotPassword}
             onPress={() => navigation.navigate('ForgotPasswordScreen')}>
@@ -154,7 +142,6 @@ const handleLogin = async () => {
         </View>
 
         <CustomButton text="Sign In" onPress={handleLogin} disabled={isButtonDisabled || loading} />
-
       </View>
     </View>
   );
@@ -163,7 +150,7 @@ const handleLogin = async () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'rgba(255, 171, 0, 0.64)', 
+    backgroundColor: 'rgba(255, 171, 0, 0.64)',
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 20,
@@ -195,21 +182,33 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 40,
-    borderColor: '#DDD',
+    borderColor: 'gray',
     borderWidth: 1,
-    borderRadius: 5,
+    borderRadius: 7,
     paddingHorizontal: 10,
     marginBottom: 15,
     fontSize: 14,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  Pinput: {
+    height: 40,
+    borderColor: 'transparent',
+    borderWidth: 1,
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    marginBottom: 0,
+    marginLeft: -12,
+    marginRight: -33,
+    fontSize: 14,
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
   },
   rememberForgotContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 20,
-  },
-  rememberMe: {
-    fontSize: 14,
-    color: '#333',
   },
   forgotPassword: {
     fontSize: 14,

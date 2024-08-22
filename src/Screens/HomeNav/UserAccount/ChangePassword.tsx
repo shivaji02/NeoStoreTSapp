@@ -1,40 +1,60 @@
-import React,{useState,useEffect} from "react";
-import {View,Text, TouchableOpacity, Image, StyleSheet} from "react-native";
-import { useNavigation } from '@react-navigation/native'; // Import the useNavigation hook
+import React from "react";
+import { View, Text, StyleSheet } from "react-native";
+import HeadBack from "../../../CustomsComponents/BackWithTitle";
 
 const ChangePassword = () => {
-    const navigation = useNavigation(); // Initialize the navigation object
+  return (
+    <View style={styles.container}>
+      <HeadBack title="Change Password" showIcon={false} />
+      <View style={styles.con}>
 
-    return (
-        <View>
-              <TouchableOpacity onPress={navigation.goBack} style={styles.backButton}>
-        <Image source={require('../../../Assets.xcassets/Images/backIcon.png')} style={styles.backIcon} />
-      </TouchableOpacity>
+        <Text style={styles.displayText}>Work in Progress </Text>
+        <Text style={styles.displayText}>meanwhile check other awesome part of the App</Text>
 
-            <Text>User Details</Text>
-        </View>
-    )
+
+        <Text style={styles.infoText}>Thank you for your patience, Please dont Logout from App</Text>
+      </View>
+    </View>
+
+  )
 }
+
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: 'rgba(255, 171, 0, 0.64)',
-      justifyContent: 'center',
-      alignItems: 'center',
-      paddingHorizontal: 20,
-    },
-    backButton: {
-      position: 'absolute',
-      top: 40, 
-      left: 20,
-      elevation: 5,
-      shadowColor: '#000',
-      
-    },
-    backIcon: {
-      width: 20,
-      height: 20,
-    },
-})  
+  container: {
+    flex: 1,
+    backgroundColor : 'rgba(255, 171, 0, 0.64)',
+  },
+  con : {
+    flex : 1,
+    justifyContent:"space-around",
+    alignItems: 'center',
+  },
+  mcontainer: {
+    backgroundColor: 'rgba(255, 171, 0, 0.64)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+  },
+
+  displayText: {
+    fontSize: 20,
+    textAlign: 'center',
+    alignSelf: 'center',
+    // color: 'teal',
+  },
+  icon: {
+    color: 'silver',
+  },
+  infoText: {
+    fontSize: 20,
+    textAlign: 'center',
+    alignSelf: 'flex-end',
+    color: 'red',
+    marginBottom: 20,
+    marginLeft: 20,
+    marginRight: 20,
+  },
+})
+
 export default ChangePassword;
 
