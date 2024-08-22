@@ -167,4 +167,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 ---
 
 ### Notes
-# Can share postman collection if needed please reach out to me .
+
+- Can share postman collection if needed please reach out to me.
+- Some custom components are highly dynamic that adds more flexibility, high reusability and robust in render.
+- Some api is called dynamically throughout app level and results improvements in ux.
