@@ -8,12 +8,12 @@ import changePassword from './UserAccount/ChangePassword';
 import ProductList from '../Product/ProductList';
 import ProductDetail from '../Product/ProductDetail';
 import CartList from '../Cart/CartList';
-import OrderScreen from '../Order/OrderScreen';
+import OrderScreen from '../Order/Orderscreen';
 import OrderConfirmationScreen from '../Order/OderConfirmationScreen';
 import AddressScreen from './UserAccount/AddressScreen';
 import OrderList from '../Order/OrderList';
- import OrderDetail from '../Order/OrderDetail';
- import Notification from './UserAccount/Notification';
+import OrderDetail from '../Order/OrderDetail';
+import Notification from './UserAccount/Notification';
 // import AddressConfirmation from '../Order/AddressConfirmation';
 
 const Stack = createStackNavigator();

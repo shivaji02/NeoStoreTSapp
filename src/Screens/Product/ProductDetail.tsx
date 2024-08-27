@@ -34,8 +34,10 @@ const ProductDetail: React.FC = () => {
         dispatch(productRating({ product_id, rating }));
     };
 
-    const handlecart = () => {
-        dispatch(addToCart({ productId: product_id, quantity: 1 }));
+    const handlecart = async() => {
+    
+       await dispatch(addToCart({ productId: product_id, quantity: 1 }));
+    
         navigation.navigate('CartList');
         console.log('Product added to cart', product_id);
     };

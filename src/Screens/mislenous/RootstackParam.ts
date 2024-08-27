@@ -8,6 +8,7 @@ type RootStackParamList = {
     Settings: undefined;
     Login: undefined;
     ProductList: { categoryId: string };
+    RegisterUserScreen : undefined
 };
 
 // Define the navigation props type for each screen
@@ -17,6 +18,7 @@ type SettingsScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Set
 type LogInScreenNavigationProp = StackNavigationProp<RootStackParamList, keyof RootStackParamList> & {
     navigation: any;
   };
+
   
 // Define the route prop type for each screen
 type HomeScreenRouteProp = RouteProp<RootStackParamList, 'Home'>;

@@ -28,7 +28,9 @@ export interface RootState {
   };
 }
 
-const LogInScreen = ({ navigation }) => {
+import { NavigationProp } from '@react-navigation/native';
+
+const LogInScreen = ({ navigation }: { navigation: NavigationProp<any> }) => {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -64,6 +66,8 @@ const LogInScreen = ({ navigation }) => {
           type: 'success',
           text1: 'Login Successful',
           text2: 'Welcome back!',
+          position: 'bottom',
+          visibilityTime: 500,
         });
       } else {
         throw new Error('Failed to validate login. Please try again.');
@@ -93,7 +97,7 @@ const LogInScreen = ({ navigation }) => {
           Don't have an account yet?{' '} 
           <Text
             style={styles.signUpText}
-            onPress={() => navigation.navigate('RegisterScreen')}>
+            onPress={() => navigation.navigate('RegisterUserScreen')}>
             Sign Up
           </Text>
         </Text>
@@ -179,6 +183,10 @@ const styles = StyleSheet.create({
   signUpText: {
     color: '#00ADEF',
     fontWeight: 'bold',
+  },
+  toast: {
+    backgroundColor: 'red',
+    color: 'white',
   },
   input: {
     height: 40,

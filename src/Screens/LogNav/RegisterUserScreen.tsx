@@ -65,7 +65,7 @@ type RegisterScreenProps = {
   navigation: RegisterScreenNavigationProp;
 };
 
-const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
+const RegisterUserScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
   const dispatch = useDispatch<AppDispatch>();
   
   const initialValues: FormValues = {
@@ -82,7 +82,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
     Toast.show({
       type: type,
       text1: text,
-      visibilityTime: 4000,
+      visibilityTime: 2000,
       autoHide: true,
       position: 'top',
     });
@@ -121,16 +121,26 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
               formData.append('gender', values.gender);
               formData.append('phone_no', values.phone_no);
               console.log('Form Data in comp:', formData);
-             dispatch(registerUser(formData)).unwrap();
+            await   dispatch(registerUser(formData)).unwrap();
               handleToast('success', 'Registration successful');
-              navigation.navigate('Login');
+              console.log('Registration successful');
+
+              navigation.goBack();
+              // navigation.navigate('Login');
+
+            //   navigation.reset({
+            //     index: 0,
+            //     routes: [{ name: 'Login' }],
+            // });
+            
             } catch (error: any) {
               if (error.response) {
                 console.error('Error response status:', error.response.status);
-                handleToast('error please check code', error); // Show toast with the error message
+                handleToast('error', error); // Show toast with the error message
               } else if (error.request) {
                 console.error('Error request:', error.request);
                 Alert.alert('Error', 'No response received from server');
+
               } else {
                 console.error('Error message:', error.message);
                 Alert.alert('Error', error.message);
@@ -324,4 +334,4 @@ const styles = StyleSheet.create({
   
 });
 
-export default RegisterScreen;
+export default RegisterUserScreen;

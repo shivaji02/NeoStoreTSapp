@@ -15,7 +15,7 @@ const OrderList: React.FC<{}> = () => {
     // Fetch order list on component mount
     useEffect(() => {
         dispatch(fetchOrderList()).unwrap();
-    }, [dispatch]);
+    }, []);
 
     // Handle sorting when "Cost" is clicked
     const handleSortByCost = () => {

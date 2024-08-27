@@ -43,11 +43,11 @@ export const initializeAuth = createAsyncThunk(
 export const registerUser = createAsyncThunk(
   'auth/registerUser',
   async (userData: any, { rejectWithValue }) => {
-    // console.log('userData in register:in slice', JSON.stringify(userData));
+     console.log('userData in register:in slice', JSON.stringify(userData));
     try { 
-      // console.log('enteering try block in register');
+      console.log('enteering try block in register');
       const response = await axiosInstance.post('/users/register', userData);
-      // console.log('Full Response Data in register:', JSON.stringify(response.data));
+      console.log('Full Response Data in register:', JSON.stringify(response.data));
       return response.data.data;
     } catch (error: any) {
       // console.log('Error in register:', error);

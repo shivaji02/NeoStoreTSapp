@@ -10,9 +10,15 @@ import { useNavigation } from '@react-navigation/native';
 const CartList: React.FC = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
-  const cartItems = useSelector(selectCartItems);
+  const [cartItems, setCartItems] = useState<any[]>([]);
+  const cartItemsRedux = useSelector(selectCartItems);
   const loading = useSelector((state: RootState) => state.cart.loading);
   const [selectedQuantities, setSelectedQuantities] = useState<{ [key: number]: number }>({});
+
+  useEffect(() => {
+    // Sync local cartItems state with Redux cartItems on component mount
+    setCartItems(cartItemsRedux);
+  }, [cartItemsRedux]);
 
   useEffect(() => {
     dispatch(listCartItems());
@@ -35,10 +41,18 @@ const CartList: React.FC = () => {
   };
 
   const handleRemoveItem = (productId: number) => {
-    console.log('Removing product:', productId); // Debugging log
-    dispatch(removeFromCart(productId.toString())).then(() => {
-      dispatch(listCartItems());
-    });
+    // Optimistically update the UI by removing the item from the local state
+    setCartItems(prevCartItems => prevCartItems.filter(item => item.product?.id !== productId));
+
+    // Proceed to remove the item from the Redux store and backend
+    dispatch(removeFromCart(productId.toString()))
+      .then(() => {
+        dispatch(listCartItems());
+      })
+      .catch(error => {
+        console.error('Failed to remove item from cart:', error);
+        // Optionally, handle the error by re-adding the item to the local state if necessary
+      });
   };
 
   const calculateTotalValue = () => {
@@ -120,9 +134,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    // backgroundColor: '#f8f8f8',
     backgroundColor: 'rgba(255, 171, 0, 0.64)',
-
   },
   cartItemContainer: {
     flexDirection: 'row',
@@ -140,6 +152,7 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 8,
+    resizeMode: 'contain',
   },
   productDetails: {
     flex: 1,
@@ -160,11 +173,13 @@ const styles = StyleSheet.create({
   },
   quantityPickerIOS: {
     width: 40,
-    paddingVertical: 10,
+    paddingVertical: 5,
     borderWidth: 1,
     borderRadius: 5,
     color: 'black',
-    paddingRight: 30,
+    paddingRight: 20,
+    alignContent: 'center',
+    marginLeft: 5,
   },
   quantityPickerAndroid: {
     width: 100,
@@ -172,8 +187,10 @@ const styles = StyleSheet.create({
     color: 'black',
   },
   deleteIconContainer: {
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     alignItems: 'center',
+    alignSelf: 'stretch',
+    backgroundColor: 'transparent',
   },
   deleteIcon: {
     width: 24,
@@ -184,13 +201,14 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'right',
     marginVertical: 10,
+    backgroundColor: 'transparent',
   },
   placeOrderButton: {
     backgroundColor: '#28a745',
     padding: 16,
     borderRadius: 8,
     alignItems: 'center',
-    marginTop: 16,
+    marginTop: 10,
   },
   placeOrderButtonText: {
     fontSize: 18,
@@ -202,8 +220,6 @@ const styles = StyleSheet.create({
     color: '#888',
     textAlign: 'center',
     marginTop: 32,
-        // backgroundColor: 'rgba(255, 171, 0, 0.64)',
-
   },
 });
 

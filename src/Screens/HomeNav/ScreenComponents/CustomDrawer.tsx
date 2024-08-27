@@ -92,9 +92,9 @@ const CustomDrawer: React.FC<{ isVisible: boolean; onClose: () => void }> = ({ i
 <TouchableOpacity onPress={()=>navigation.navigate('OrderList')}>
           <Text style ={styles.drawerItem} >Order History</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={()=>navigation.navigate('UpdateDetails')}>
+        {/* <TouchableOpacity onPress={()=>navigation.navigate('UpdateDetails')}>
           <Text style ={styles.drawerItem} >Update Details</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         <TouchableOpacity onPress={()=>navigation.navigate('changePassword')}>
           <Text style ={styles.drawerItem} >Change Password</Text>
         </TouchableOpacity>

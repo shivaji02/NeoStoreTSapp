@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, TextInput, StyleSheet } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient'
-import Icon from 'react-native-vector-icons/MaterialIcons';
+// import Icon from 'react-native-vector-icons/MaterialIcons';
 const YourComponent = () => {
   // Mock values for demonstration; replace with actual form handling logic
   const values = {
